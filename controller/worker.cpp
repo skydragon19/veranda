@@ -32,7 +32,7 @@ void Worker::doWork() {
     QDateTime dateTime = QDateTime::currentDateTime();
 
     this->get_modem_info(Qdb, idx_ship);
-    //this->getResponSkyW();
+    this->getResponSkyW();
 
     //skywaveNetwork skw;
     //skw.requestData("wdwd");
