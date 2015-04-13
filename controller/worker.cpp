@@ -3,8 +3,6 @@
 extern struct xmll xmls;
 
 Worker::Worker(QObject *parent) : QObject(parent){
-    qDebug() << "yang penting kebaca dulu yah";
-
 #if 1
     QSqlDatabase db = mysql.connect_db();
 
@@ -16,11 +14,12 @@ Worker::Worker(QObject *parent) : QObject(parent){
 
     idx_ship = 1;
     sum_ship = get->sum_ship(db);
+#endif
 
     qDebug() << "start";
 
     this->doWork();
-#endif
+
 }
 
 void Worker::CheckForRequest(){
@@ -50,13 +49,14 @@ void Worker::getResponSkyW(){
 
     QString urls;
 
+#if 1
     if (xml_ver == 1){
         urls.sprintf("http://isatdatapro.skywave.com/GLGW/GWServices_v1/RestMessages.svc/get_return_messages.xml/?access_id=%s&password=%s&start_utc=%s&mobile_id=%s", access_id.toLocal8Bit().data(), password.toLocal8Bit().data(), nextutc.toLocal8Bit().data(), modem_id.toLocal8Bit().data());
     }
     else if ( xml_ver == 2){
-        qDebug() << "xml baru";
+        urls.sprintf("http://m2prime.aissat.com/RestMessages.svc/get_return_messages.xml/?access_id=%s&password=%s&start_utc=%s&mobile_id=%s", access_id.toLocal8Bit().data(), password.toLocal8Bit().data(), nextutc.toLocal8Bit().data(), modem_id.toLocal8Bit().data());
     }
-
+#endif
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
     request.setUrl(url);
     manager->get(request);
@@ -65,7 +65,7 @@ void Worker::getResponSkyW(){
 void Worker::replyFinished(QNetworkReply* reply){
     QString readAll=reply->readAll();
     read->parse_xml(readAll, Qdb, idx_ship, SIN, MIN);
-
+#if 1
     if (idx_ship != sum_ship){
         idx_ship++;
         qDebug() << "HABIS";
@@ -74,6 +74,7 @@ void Worker::replyFinished(QNetworkReply* reply){
         idx_ship = 1;
         qDebug() << "STOP\n\nNunggu Timer";
     }
+#endif
 }
 
 void Worker::get_modem_info(QSqlDatabase db, int id){
@@ -100,7 +101,7 @@ void Worker::get_modem_info(QSqlDatabase db, int id){
             else{
                 nextutc = q.value(3).toDateTime().toString("yyyy-MM-dd hh-mm-ss");
             }
-            qDebug() << modem_id << access_id << password << nextutc << SIN << MIN << xml_ver;
+            qDebug() << "Request SkyWave data : "<< modem_id;
         }
     }
 }

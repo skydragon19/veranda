@@ -10,6 +10,7 @@
 
 #include <../model/get_db.h>
 #include <../model/save_db.h>
+#include <../util/parsing_fuction.h>
 
 class util_skyw : public QObject
 {
@@ -25,6 +26,7 @@ public slots:
 private:
     get_db get;
     save_db save;
+    parsing_function parse;
 
     int jum_dat;
 };

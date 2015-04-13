@@ -45,12 +45,14 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
             }
 
             // Cek SIN
-            if (sin_xml == SIN){
-                save.update_next_utc(db, MessageUTC, id_ship);
-
+            if (sin_xml == 128){
+                //save.update_next_utc(db, MessageUTC, id_ship);
                 // jika rawpayload
                 if (xml.name() == "RawPayload"){
-                    // --> proses parsing
+                    QString decode = parse.decode_base64(xml.readElementText());
+                    QString bin = parse.hex_to_bin_conversion(decode);
+                    QString f_5c32g = parse.format_5cut_32get(bin);
+                    parse.parse_data(db, f_5c32g, id_ship, 0);
                 }
 
                 // jika Payload
@@ -66,7 +68,6 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
 
                     if (cnt == 0){
                         const QDateTime time = QDateTime::fromTime_t((int)data_f);
-
                         epochtime = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
 
                         year = time.toString("yyyy").toInt();

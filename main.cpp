@@ -8,7 +8,6 @@
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    qDebug() << "main thread ID: " << a.thread()->currentThreadId();
 
     Worker worker;
 
