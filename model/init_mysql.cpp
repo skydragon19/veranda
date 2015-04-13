@@ -24,3 +24,10 @@ QSqlDatabase init_mysql::connect_db(){
 
     return (QSqlDatabase) db;
 }
+
+void init_mysql::tulis_setting(){
+    QString pth = "setting.ini";
+    QSettings sett(pth, QSettings::IniFormat);
+
+    sett.setValue("status", "connect");
+}

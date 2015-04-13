@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     model/get_db.cpp \
     controller/worker.cpp \
     model/save_db.cpp \
-    model/init_mysql.cpp
+    model/init_mysql.cpp \
+    util/parsing_fuction.cpp
 
 HEADERS += \
     util/util_skyw.h \
@@ -33,4 +34,5 @@ HEADERS += \
     model/get_db.h \
     controller/worker.h \
     model/save_db.h \
-    model/init_mysql.h
+    model/init_mysql.h \
+    util/parsing_fuction.h

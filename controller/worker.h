@@ -16,12 +16,13 @@
 #include "../util/util_skyw.h"
 #include "../view/skywavenetwork.h"
 #include "../model/get_db.h";
+#include "../model/init_mysql.h"
 
 class Worker : public QObject
 {
     Q_OBJECT
 public:
-    explicit Worker(QObject *parent = 0, QSqlDatabase db = 0);
+    explicit Worker(QObject *parent = 0);
     QXmlStreamReader xml;
 signals:
     
@@ -34,6 +35,8 @@ private slots:
     void replyFinished(QNetworkReply* reply);
 
 private:
+    init_mysql mysql;
+
     QTimer timer;
     util_skyw *read;
     get_db *get;
@@ -49,6 +52,7 @@ private:
     QString nextutc;
     int SIN;
     int MIN;
+    int xml_ver;
 
     QSqlDatabase Qdb;
 
