@@ -137,7 +137,7 @@ void parsing_function::parse_data(QSqlDatabase db, QString dat, int id_ship){
 #if 1 /* hasil parsing n data float */
             if (cnt_d == 1){
                 const QDateTime time = QDateTime::fromTime_t((((int)data_f)));
-                epochtime = time.toString(Qt::TextDate).toLocal8Bit().data();
+                epochtime = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
 
                 year = time.toString("yyyy").toInt();
                 month = time.toString("MM").toInt();
