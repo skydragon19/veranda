@@ -46,7 +46,7 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
 
             // Cek SIN
             if (sin_xml == 128){
-                //save.update_next_utc(db, MessageUTC, id_ship);
+                save.update_next_utc(db, MessageUTC, id_ship);
                 // jika rawpayload
                 if (xml.name() == "RawPayload"){
                     QString decode = parse.decode_base64(xml.readElementText());
