@@ -52,7 +52,7 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
                     QString decode = parse.decode_base64(xml.readElementText());
                     QString bin = parse.hex_to_bin_conversion(decode);
                     QString f_5c32g = parse.format_5cut_32get(bin);
-                    parse.parse_data(db, f_5c32g, id_ship, 0);
+                    parse.parse_data(db, f_5c32g, id_ship);
                 }
 
                 // jika Payload
