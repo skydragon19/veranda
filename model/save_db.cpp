@@ -8,7 +8,7 @@ void save_db::data(QSqlDatabase db, float value, int id_tu, int id_trip, QString
                    int hour, int minute, int origin){
     QSqlQuery q(db);
 
-    q.prepare("INSERT INTO data(id_titik_ukur, value, id_trip, data_time, year, month, day, hour, minute, origin) VALUES(:id_tu, :value, :id_trip, \
+    q.prepare("INSERT IGNORE INTO data(id_titik_ukur, value, id_trip, data_time, year, month, day, hour, minute, origin) VALUES(:id_tu, :value, :id_trip, \
               :data_time, :year, :month, :day, :hour, :minute, :origin)");
 
     q.bindValue(":id_tu", id_tu);
