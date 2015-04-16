@@ -14,7 +14,6 @@ public:
     init_mysql();
 
     QSqlDatabase connect_db();
-    void tulis_setting();
 };
 
 #endif // INIT_MYSQL_H

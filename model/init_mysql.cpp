@@ -6,7 +6,7 @@ init_mysql::init_mysql()
 
 QSqlDatabase init_mysql::connect_db(){
 
-    QString pth = "/var/www/marine/public_html/vts/veranda/setting.ini";
+    QString pth = "setting.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
     QString host = sett.value("hostname").toString();
@@ -23,11 +23,4 @@ QSqlDatabase init_mysql::connect_db(){
     db.open();
 
     return (QSqlDatabase) db;
-}
-
-void init_mysql::tulis_setting(){
-    QString pth = "setting.ini";
-    QSettings sett(pth, QSettings::IniFormat);
-
-    sett.setValue("status", "connect");
 }
