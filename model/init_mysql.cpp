@@ -5,8 +5,9 @@ init_mysql::init_mysql()
 }
 
 QSqlDatabase init_mysql::connect_db(){
+    QString path = QDir::currentPath();
 
-    QString pth = "/var/www/marine/public_html/vts/veranda/setting.ini";
+    QString pth = path+"/setting.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
     QString host = sett.value("hostname").toString();
