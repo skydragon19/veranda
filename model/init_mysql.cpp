@@ -6,6 +6,8 @@ init_mysql::init_mysql()
 
 QSqlDatabase init_mysql::connect_db(){
 
+    /* hardcode path setting */
+
     QString pth = "/var/www/marine/public_html/vts/veranda/setting.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
