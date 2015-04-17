@@ -1,4 +1,4 @@
-//#include <QtCore/QCoreApplication>
+#include <QtCore/QCoreApplication>
 #include <stdio.h>
 
 #include "controller/worker.h"
