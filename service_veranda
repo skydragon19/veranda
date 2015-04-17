@@ -10,7 +10,7 @@
 
 SCRIPT=usr/bin/veranda_satelite_parser
 RUNAS=root
-NAME=veranda
+NAME=service_veranda
 
 PIDFILE=/var/run/$NAME.pid
 LOGFILE=/var/log/$NAME.log
