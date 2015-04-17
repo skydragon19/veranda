@@ -5,6 +5,7 @@
 #include <QSqlError>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QDir>
 
 #include <QSettings>
 

@@ -5,8 +5,7 @@ init_mysql::init_mysql()
 }
 
 QSqlDatabase init_mysql::connect_db(){
-
-    QString pth = "setting.ini";
+    QString pth ="setting.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
     QString host = sett.value("hostname").toString();
