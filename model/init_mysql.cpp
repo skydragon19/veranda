@@ -5,7 +5,7 @@ init_mysql::init_mysql()
 }
 
 QSqlDatabase init_mysql::connect_db(){
-    QString pth ="/usr/bin/setting.ini";
+    QString pth ="/usr/bin/veranda_set.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
     QString host = sett.value("hostname").toString();
