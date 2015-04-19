@@ -5,9 +5,14 @@ init_mysql::init_mysql()
 }
 
 QSqlDatabase init_mysql::connect_db(){
-    QString path = QDir::currentPath();
+    //QString path = QDir::currentPath();
+     
+    //qDebug()  << path;
 
-    QString pth = path+"/setting.ini";
+    //QString pth = path+"/setting.ini";
+    QString pth = "/var/www/marine/public_html/vts/veranda/setting.ini";
+    qDebug() << pth;
+    
     QSettings sett(pth, QSettings::IniFormat);
 
     QString host = sett.value("hostname").toString();
@@ -15,7 +20,7 @@ QSqlDatabase init_mysql::connect_db(){
     QString user = sett.value("username").toString();
     QString password = sett.value("password").toString();
 
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", "monita_marine");
+    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName(host);
     db.setDatabaseName(dbname);
     db.setUserName(user);
