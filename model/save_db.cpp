@@ -7,11 +7,27 @@ save_db::save_db()
 void save_db::data(QSqlDatabase db, float value, int id_tu, int id_trip, QString data_time, int year, int month, int day,
                    int hour, int minute, int origin){
     QSqlQuery q(db);
-
+#if 0
     q.prepare("INSERT IGNORE INTO data(id_titik_ukur, value, id_trip, data_time, year, month, day, hour, minute, origin) VALUES(:id_tu, :value, :id_trip, \
               :data_time, :year, :month, :day, :hour, :minute, :origin)");
 
     q.bindValue(":id_tu", id_tu);
+    q.bindValue(":value", value);
+    q.bindValue(":id_trip", id_trip);
+    q.bindValue(":data_time", data_time.toLocal8Bit().data());
+    q.bindValue(":year", year);
+    q.bindValue(":month", month);
+    q.bindValue(":day", day);
+    q.bindValue(":hour", hour);
+    q.bindValue(":minute", minute);
+    q.bindValue(":origin", origin);
+
+    q.exec();
+#endif
+    q.prepare("REPLACE INTO data (id_titik_ukur, value, id_trip, data_time, year, month, day, hour, minute, origin) VALUES(:id_titik_ukur, :value, \
+              :id_trip, :data_time, :year, :month, :day, :hour, :minute, :origin)");
+
+    q.bindValue(":id_titik_ukur", id_tu);
     q.bindValue(":value", value);
     q.bindValue(":id_trip", id_trip);
     q.bindValue(":data_time", data_time.toLocal8Bit().data());
