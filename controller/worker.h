@@ -14,6 +14,8 @@
 #include <QSqlQuery>
 
 #include "../util/util_skyw.h"
+#include "../util/utama.h"
+
 #include "../view/skywavenetwork.h"
 #include "../model/get_db.h";
 #include "../model/init_mysql.h"
@@ -35,6 +37,8 @@ private slots:
     void replyFinished(QNetworkReply* reply);
 
 private:
+    struct utama *marine;
+
     init_mysql mysql;
 
     QTimer timer;
@@ -46,17 +50,24 @@ private:
     int sum_ship;
     int cek_replay;
 
+    int ship_count;
+    int count;
+
     QString modem_id;
     QString access_id;
     QString password;
     QString nextutc;
+    QString gateway;
+
+    QString urls;
+
     int SIN;
     int MIN;
     int xml_ver;
 
-    QSqlDatabase Qdb;
+    QSqlDatabase db;
 
-    void get_modem_info(QSqlDatabase db, int id);
+    void get_modem_info(QSqlDatabase db);
 };
 
 #endif // TIMER_H

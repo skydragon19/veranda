@@ -35,4 +35,5 @@ HEADERS += \
     controller/worker.h \
     model/save_db.h \
     model/init_mysql.h \
-    util/parsing_fuction.h
+    util/parsing_fuction.h \
+    util/utama.h
