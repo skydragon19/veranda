@@ -1,10 +1,10 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
+    db = mysql.connect_db();
+
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
     timer.start(1000 * 60 * 10); /* 10 menit */
-
-    db = mysql.connect_db();
 
     count = 0;
     ship_count = 0;
