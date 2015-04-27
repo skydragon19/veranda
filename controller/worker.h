@@ -26,6 +26,7 @@ class Worker : public QObject
 public:
     explicit Worker(QObject *parent = 0);
     QXmlStreamReader xml;
+
 signals:
     
 public slots:

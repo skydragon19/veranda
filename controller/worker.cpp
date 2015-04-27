@@ -1,6 +1,9 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
+    connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
+    timer.start(1000 * 60 * 10); /* 10 menit */
+
     db = mysql.connect_db();
 
     count = 0;
@@ -10,27 +13,15 @@ Worker::Worker(QObject *parent) : QObject(parent){
     memset((char *) marine, 0, sizeof(struct utama));
 
     this->get_modem_info(db);
-
-#if 0
-    connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
-    timer.start(1000 * 60 * 10); /* 10 menit */
-
-    Qdb = db;
-    cek_replay = 0;
-
-    idx_ship = 1;
-    sum_ship = get->sum_ship(db);
-#endif
     this->doWork();
 }
 
 void Worker::CheckForRequest(){
-    qDebug() << QDateTime::currentDateTime().toString("mm").toInt();
+    //qDebug() << QDateTime::currentDateTime().toString("mm").toInt();
 }
 
 void Worker::doWork() {
-    qDebug() << "Request Data";
-
+    //qDebug() << "::Request Data Moobile ID :" << marine->kapal[ship_count].modem_id;
     this->getResponSkyW();
 
     //skywaveNetwork skw;
@@ -42,7 +33,7 @@ void Worker::doWork() {
 void Worker::getResponSkyW(){
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
-    qDebug()<< __FUNCTION__;
+    //qDebug()<< __FUNCTION__;
 
     QNetworkRequest request;
 
@@ -56,7 +47,7 @@ void Worker::getResponSkyW(){
                  gateway.toLocal8Bit().data(), access_id.toLocal8Bit().data(), password.toLocal8Bit().data(),
                  nextutc.toLocal8Bit().data(), modem_id.toLocal8Bit().data());
 
-    qDebug() << urls;
+    //qDebug() << urls;
 
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
     request.setUrl(url);
@@ -65,16 +56,16 @@ void Worker::getResponSkyW(){
 
 void Worker::replyFinished(QNetworkReply* reply){
     QString readAll=reply->readAll();
-    //read->parse_xml(readAll, Qdb, idx_ship, SIN, MIN);
-
+    read->parse_xml(readAll, db, marine->kapal[ship_count].id_ship, SIN, MIN, marine);
+    //qDebug() << "Next UTC :" << marine->kapal[ship_count].nextutc;
     ship_count++;
 #if 1
     if (ship_count < count){
-        qDebug() << "HABIS";
+        //qDebug() << "HABIS";
         this->doWork();        
     }else{
         ship_count = 0;
-        qDebug() << "STOP\n\nNunggu Timer";
+        //qDebug() << "STOP\n\::Waiting Next Request::";
     }
 #endif
 
