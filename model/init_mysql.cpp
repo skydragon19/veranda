@@ -5,6 +5,7 @@ init_mysql::init_mysql()
 }
 
 QSqlDatabase init_mysql::connect_db(){
+#if 0
     QString pth = "veranda_set.ini";
     QSettings sett(pth, QSettings::IniFormat);
 
@@ -12,14 +13,20 @@ QSqlDatabase init_mysql::connect_db(){
     QString dbname = sett.value("databasename").toString();
     QString user = sett.value("username").toString();
     QString password = sett.value("password").toString();
+#endif
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName(host);
-    db.setDatabaseName(dbname);
-    db.setUserName(user);
-    db.setPassword(password);
+    db.setHostName("localhost");
+    db.setDatabaseName("marine_1");
+    db.setUserName("root");
+    db.setPassword("rqi");
 
-    db.open();
+    if(db.open()){
+        printf("Initialization                                          [DONE]\n");
+    }
+    else{
+        printf("Initialization                                          [FAILED]\n");
+    }
 
     return (QSqlDatabase) db;
 }

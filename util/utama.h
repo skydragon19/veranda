@@ -5,9 +5,10 @@
 
 struct ship{
     int id_ship;
-    char modem_id[64];
-    char access_id[64];
-    char password[64];
+    char name[32];
+    char modem_id[32];
+    char access_id[32];
+    char password[32];
     char nextutc[32];
     int SIN;
     int MIN;

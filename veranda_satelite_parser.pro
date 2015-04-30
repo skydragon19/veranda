@@ -21,7 +21,6 @@ MOC_DIR = compile
 
 SOURCES += main.cpp \
     util/util_skyw.cpp \
-    view/skywavenetwork.cpp \
     model/get_db.cpp \
     controller/worker.cpp \
     model/save_db.cpp \
@@ -30,7 +29,6 @@ SOURCES += main.cpp \
 
 HEADERS += \
     util/util_skyw.h \
-    view/skywavenetwork.h \
     model/get_db.h \
     controller/worker.h \
     model/save_db.h \

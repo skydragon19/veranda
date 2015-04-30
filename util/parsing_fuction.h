@@ -5,8 +5,8 @@
 #include <QDebug>
 #include <QDateTime>
 
-#include <../model/get_db.h>
-#include <../model/save_db.h>
+#include <model/get_db.h>
+#include <model/save_db.h>
 
 #define  GMT    25200
 

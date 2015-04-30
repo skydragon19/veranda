@@ -8,10 +8,10 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-#include <../model/get_db.h>
-#include <../model/save_db.h>
-#include <../util/parsing_fuction.h>
-#include <../util/utama.h>
+#include <model/get_db.h>
+#include <model/save_db.h>
+#include <util/parsing_fuction.h>
+#include <util/utama.h>
 
 class util_skyw : public QObject
 {

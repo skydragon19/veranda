@@ -35,10 +35,11 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
         QXmlStreamReader::TokenType token = xml.readNext();
         if(token == QXmlStreamReader::StartElement) {
             if (xml.name() == "MobileID"){
-                //qDebug() << "  MobileID : "<<xml.readElementText();
+
             }
             if (xml.name() == "MessageUTC"){
                 MessageUTC = xml.readElementText();
+                printf("    MessageUTC : %s \n", MessageUTC.toLocal8Bit().data());
             }
             if (xml.name() == "SIN"){
                 sin_xml = xml.readElementText().toInt();
@@ -48,7 +49,7 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
             if (sin_xml == 128){
                 save.update_next_utc(db, MessageUTC, id_ship);
                 strcpy(marine->kapal[id_ship-1].nextutc, MessageUTC.toLatin1());
-#if 1
+
                 // jika rawpayload
                 if (xml.name() == "RawPayload"){
                     QString decode = parse.decode_base64(xml.readElementText());
@@ -89,7 +90,6 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
                         cnt_tu++;
                     }
                 }
-#endif
             }
         }
     }

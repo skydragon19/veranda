@@ -9,7 +9,7 @@ int get_db::sum_ship(QSqlDatabase db){
 
     q.prepare("SELECT COUNT(id_ship) FROM ship");
     if (!q.exec()){
-        qDebug() << "err():";
+        printf("err():\n");
         return (int) 0;
     }
     else{
@@ -27,7 +27,7 @@ int get_db::id_tu_ship(QSqlDatabase db, int id_ship, int urutan){
 
     q.prepare(query);
     if(!q.exec()){
-        qDebug() << "err():";
+        printf("err():\n");
         return (int) 0;
     }
     else{

@@ -16,7 +16,6 @@
 #include "../util/util_skyw.h"
 #include "../util/utama.h"
 
-#include "../view/skywavenetwork.h"
 #include "../model/get_db.h";
 #include "../model/init_mysql.h"
 
