@@ -8,14 +8,9 @@ util_skyw::util_skyw(QObject *parent) :
 void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, int MIN, struct utama *marine)  {
     int cnt = 0;
     int cnt_tu = 1;
-    QString epochtime;
 
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int origin;
+    int epochtime;
+    QString dat_time;
 
     int sin_xml;
     int min_xml;
@@ -70,22 +65,19 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
                     float data_f = *(float *) &value;
 
                     if (cnt == 0){
-                        const QDateTime time = QDateTime::fromTime_t((int)data_f);
-                        epochtime = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
+                        epochtime = (int) data_f;
+                        printf("%d\n", epochtime);
 
-                        year = time.toString("yyyy").toInt();
-                        month = time.toString("MM").toInt();
-                        day = time.toString("dd").toInt();
-                        hour = time.toString("hh").toInt();
-                        minute = time.toString("mm").toInt();
-                        origin = time.toString("ss").toInt();
+                        const QDateTime time = QDateTime::fromTime_t((int)data_f);
+                        dat_time = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
+                        printf("\n%s\n", dat_time.toLocal8Bit().data());
 
                         cnt = 1;
                     }
                     else{
                         int id_tu = get.id_tu_ship(db, id_ship, cnt_tu);
                         if (id_tu != 0){
-                            save.data(db, data_f, id_tu, 0, epochtime, year, month, day, hour, minute, origin);
+                            save.data(db, data_f, id_tu, 0, epochtime, dat_time);
                         }
                         cnt_tu++;
                     }

@@ -101,14 +101,8 @@ QString parsing_function::format_5cut_32get(QString biner){
 }
 
 void parsing_function::parse_data(QSqlDatabase db, QString dat, int id_ship){
-    QString epochtime;
-
-    int year;
-    int month;
-    int day;
-    int hour;
-    int minute;
-    int origin;
+    int epochtime;
+    QString dat_time;
 
     float data_f;
     int cnt_p = 0;
@@ -136,20 +130,14 @@ void parsing_function::parse_data(QSqlDatabase db, QString dat, int id_ship){
 
 #if 1 /* hasil parsing n data float */
             if (cnt_d == 1){
+                epochtime = (int) data_f;
                 const QDateTime time = QDateTime::fromTime_t((((int)data_f)));
-                epochtime = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
-
-                year = time.toString("yyyy").toInt();
-                month = time.toString("MM").toInt();
-                day = time.toString("dd").toInt();
-                hour = time.toString("hh").toInt();
-                minute = time.toString("mm").toInt();
-                origin = time.toString("ss").toInt();
+                dat_time = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
             }
             else{
                 int id_tu = get.id_tu_ship(db, id_ship, cnt_d-1);
                 if (id_tu != 0){
-                    save.data(db, data_f, id_tu, 0, epochtime, year, month, day, hour, minute, origin);
+                    save.data(db, data_f, id_tu, 0, epochtime, dat_time);
                 }
             }
 #endif

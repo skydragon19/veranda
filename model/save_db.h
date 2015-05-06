@@ -12,8 +12,7 @@ class save_db
 public:
     save_db();
 
-    void data(QSqlDatabase db, float value, int id_tu, int id_trip, QString data_time, int year, int month, int day,
-              int hour, int minute, int origin);
+    void data(QSqlDatabase db, float value, int id_tu, int id_trip, int epochtime, QString data_time);
     void update_next_utc(QSqlDatabase db, QString next_utc, int id_ship);
 };
 

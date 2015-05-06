@@ -4,25 +4,25 @@ save_db::save_db()
 {
 }
 
-void save_db::data(QSqlDatabase db, float value, int id_tu, int id_trip, QString data_time, int year, int month, int day,
-                   int hour, int minute, int origin){
+void save_db::data(QSqlDatabase db, float value, int id_tu, int id_trip, int epochtime, QString data_time){
     QSqlQuery q(db);
 
-    q.prepare("REPLACE INTO data(id_titik_ukur, value, id_trip, data_time, year, month, day, hour, minute, origin) VALUES(:id_tu, :value, :id_trip, \
-              :data_time, :year, :month, :day, :hour, :minute, :origin)");
+    printf("\n%f, %d, %d, %d, %s", value, id_tu, id_trip, epochtime, data_time.toLocal8Bit().data());
 
-    q.bindValue(":id_tu", id_tu);
+    q.prepare("REPLACE INTO data(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)");
+
+    q.bindValue(":id_titik_ukur", id_tu);
     q.bindValue(":value", value);
     q.bindValue(":id_trip", id_trip);
+    q.bindValue(":epochtime", epochtime);
     q.bindValue(":data_time", data_time.toLocal8Bit().data());
-    q.bindValue(":year", year);
-    q.bindValue(":month", month);
-    q.bindValue(":day", day);
-    q.bindValue(":hour", hour);
-    q.bindValue(":minute", minute);
-    q.bindValue(":origin", origin);
 
-    q.exec();
+    if(!q.exec()){
+        printf("no");
+    }
+    else{
+        printf("yes");
+    }
 }
 
 void save_db::update_next_utc(QSqlDatabase db, QString next_utc, int id_ship){
