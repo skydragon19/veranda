@@ -5,17 +5,24 @@ Worker::Worker(QObject *parent) : QObject(parent){
 
     QFile file;
     QString name;
-    name.sprintf("verandalog_%s", QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy hh:mm:ss").toLocal8Bit().data());
+    name.sprintf("log/verandalog_%s", QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy hh:mm:ss").toLocal8Bit().data());
 
     file.setFileName(name.toLocal8Bit());
     file.open(QIODevice::WriteOnly | QIODevice::Text);
 
     files = &file;
 
-    files->write("START");
+    files->write(":: Veranda Satelite Parsing is Started ::\n\n");
 
-    printf("Initialization Database .. \n");
-    db = mysql.connect_db();
+    QString utc, localtime;
+
+    utc.sprintf(" * UTC Time   : %s\n", QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy hh:mm:ss").toLocal8Bit().data());
+    files->write(utc.toLocal8Bit());
+    localtime.sprintf(" * Local TIme : %s\n", QDateTime::currentDateTime().toString("dd-MM-yyyy hh:mm:ss").toLocal8Bit().data());
+    files->write(localtime.toLocal8Bit());
+
+    files->write("\nInitialization Database .. \n");
+    db = mysql.connect_db(files);
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
     timer.start(1000 * 60 * 10); /* 10 menit */
@@ -26,8 +33,8 @@ Worker::Worker(QObject *parent) : QObject(parent){
     marine = (struct utama *) malloc( sizeof (struct utama));
     memset((char *) marine, 0, sizeof(struct utama));
 
-    printf("Initialization memory .. \n");
-    this->get_modem_info(db);
+    files->write("\nInitialization memory .. \n");
+    this->get_modem_info(files, db);
     this->doWork();
 }
 
@@ -36,6 +43,7 @@ void Worker::CheckForRequest(){
 }
 
 void Worker::doWork() {
+    files->write("\nRequest xml\n");
     this->getResponSkyW();
 
     //skywaveNetwork skw;
@@ -85,12 +93,12 @@ void Worker::replyFinished(QNetworkReply* reply){
 
 }
 
-void Worker::get_modem_info(QSqlDatabase db){
+void Worker::get_modem_info(QFile *file, QSqlDatabase db){
     QSqlQuery q(db);
 
     q.prepare("SELECT s.id_ship, s.name, s.modem_id, s.access_id, s.password, s.nextutc, s.SIN, s.MIN, g.url FROM ship s join gateway g on g.id = s.gateway where s.status = 1");
     if(!q.exec()){
-        printf("Initialization                                          [FAILED]\n");
+        file->write("Initialization                                          [FAILED]\n");
     }
     else{
         while(q.next()){
@@ -111,6 +119,6 @@ void Worker::get_modem_info(QSqlDatabase db){
 
             count++;
         }
-        printf("Initialization                                          [DONE]\n");
+        file->write("Initialization                                          [DONE]\n");
     }
 }

@@ -68,7 +68,7 @@ private:
     QSqlDatabase db;
     QFile *files;
 
-    void get_modem_info(QSqlDatabase db);
+    void get_modem_info(QFile *file, QSqlDatabase db);
 };
 
 #endif // TIMER_H

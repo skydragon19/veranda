@@ -14,7 +14,7 @@ class init_mysql
 public:
     init_mysql();
 
-    QSqlDatabase connect_db();
+    QSqlDatabase connect_db(QFile *file);
     void tulis_setting();
 };
 
