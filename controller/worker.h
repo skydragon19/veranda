@@ -66,6 +66,7 @@ private:
     int xml_ver;
 
     QSqlDatabase db;
+    QFile *files;
 
     void get_modem_info(QSqlDatabase db);
 };

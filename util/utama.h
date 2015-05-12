@@ -3,6 +3,9 @@
 
 #include <QString>
 
+#include <QFile>
+#include <QIODevice>
+
 struct ship{
     int id_ship;
     char name[32];

@@ -1,6 +1,19 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
+    files = new QFile();
+
+    QFile file;
+    QString name;
+    name.sprintf("verandalog_%s", QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy hh:mm:ss").toLocal8Bit().data());
+
+    file.setFileName(name.toLocal8Bit());
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+
+    files = &file;
+
+    files->write("START");
+
     printf("Initialization Database .. \n");
     db = mysql.connect_db();
 
