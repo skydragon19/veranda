@@ -5,7 +5,7 @@ util_skyw::util_skyw(QObject *parent) :
 {
 }
 
-void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, int MIN, struct utama *marine)  {
+void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *marine)  {
     int cnt = 0;
     int cnt_tu = 1;
 
@@ -13,15 +13,10 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
     QString dat_time;
 
     int sin_xml;
-    int min_xml;
 
-    QString el;
     QXmlStreamReader xml;
-    QByteArray text;
 
-    QString ID;
     QString MessageUTC;
-    QString MobileID;
 
     xml.clear();
     xml.addData(skyw);
@@ -42,7 +37,8 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
 
             // Cek SIN
             if (sin_xml == 128){
-                save.update_next_utc(db, MessageUTC, id_ship);
+                q->clear();
+                save.update_next_utc(q, MessageUTC, id_ship);
                 strcpy(marine->kapal[id_ship-1].nextutc, MessageUTC.toLatin1());
 
                 // jika rawpayload
@@ -50,7 +46,7 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
                     QString decode = parse.decode_base64(xml.readElementText());
                     QString bin = parse.hex_to_bin_conversion(decode);
                     QString f_5c32g = parse.format_5cut_32get(bin);
-                    parse.parse_data(db, f_5c32g, id_ship);
+                    parse.parse_data(q, f_5c32g, id_ship);
                 }
 
                 // jika Payload
@@ -70,14 +66,19 @@ void util_skyw::parse_xml(QString skyw, QSqlDatabase db, int id_ship, int SIN, i
 
                         const QDateTime time = QDateTime::fromTime_t((int)data_f);
                         dat_time = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
-                        printf("\n%s\n", dat_time.toLocal8Bit().data());
 
                         cnt = 1;
                     }
                     else{
-                        int id_tu = get.id_tu_ship(db, id_ship, cnt_tu);
+                        q->clear();
+                        int id_tu = get.id_tu_ship(q, id_ship, cnt_tu);
                         if (id_tu != 0){
-                            save.data(db, data_f, id_tu, 0, epochtime, dat_time);
+                            printf("\n%d", id_tu);
+                            q->clear();
+                            save.data(q, data_f, id_tu, 0, epochtime, dat_time);
+                        }
+                        else{
+                            printf("\nbelum di set parsing refnya");
                         }
                         cnt_tu++;
                     }

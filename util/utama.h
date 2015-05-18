@@ -19,6 +19,7 @@ struct ship{
 };
 
 struct utama{
+    int sum_ship;
     struct ship kapal[50]; /* masih hardoce untuk alokasi 50 kapal */
 };
 

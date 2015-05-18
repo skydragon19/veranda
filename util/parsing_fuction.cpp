@@ -100,7 +100,7 @@ QString parsing_function::format_5cut_32get(QString biner){
     return (QString) all_32bit;
 }
 
-void parsing_function::parse_data(QSqlDatabase db, QString dat, int id_ship){
+void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
     int epochtime;
     QString dat_time;
 
@@ -135,9 +135,14 @@ void parsing_function::parse_data(QSqlDatabase db, QString dat, int id_ship){
                 dat_time = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
             }
             else{
-                int id_tu = get.id_tu_ship(db, id_ship, cnt_d-1);
+                q->clear();
+                int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
-                    save.data(db, data_f, id_tu, 0, epochtime, dat_time);
+                    printf("\n%d", id_tu);
+                    save.data(q, data_f, id_tu, 0, epochtime, dat_time);
+                }
+                else{
+                    printf("\nbelum di set parsing_ref nya");
                 }
             }
 #endif

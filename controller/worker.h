@@ -31,19 +31,20 @@ signals:
 public slots:
 
 private slots:
-    void CheckForRequest();
     void doWork();
     void getResponSkyW();
+    void CheckForRequest();
     void replyFinished(QNetworkReply* reply);
 
 private:
     struct utama *marine;
 
-    init_mysql mysql;
+    QNetworkAccessManager *manager;
 
+    init_mysql mysql;
     QTimer timer;
-    util_skyw *read;
-    get_db *get;
+    util_skyw read;
+    get_db get;
     //skywaveNetwork skw;
 
     int idx_ship;
@@ -51,13 +52,6 @@ private:
     int cek_replay;
 
     int ship_count;
-    int count;
-
-    QString modem_id;
-    QString access_id;
-    QString password;
-    QString nextutc;
-    QString gateway;
 
     QString urls;
 
@@ -66,9 +60,9 @@ private:
     int xml_ver;
 
     QSqlDatabase db;
-    QFile *files;
+    QSqlQuery *qsql;
 
-    void get_modem_info(QFile *file, QSqlDatabase db);
+    void initNetworkManager();
 };
 
 #endif // TIMER_H
