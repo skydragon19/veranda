@@ -113,7 +113,6 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
     char dats[dat.size()+1];
     strcpy(dats, dat.toLatin1());
 
-    int jum_dat = (dat.size() / 32);
 #if 1
     int cnt_df = 0;
 

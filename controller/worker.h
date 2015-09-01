@@ -47,6 +47,8 @@ private:
     get_db get;
     //skywaveNetwork skw;
 
+    int cnt_panggil;
+
     int idx_ship;
     int sum_ship;
     int cek_replay;

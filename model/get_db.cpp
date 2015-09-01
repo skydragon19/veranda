@@ -24,6 +24,7 @@ int get_db::id_tu_ship(QSqlQuery *q, int id_ship, int urutan){
 
     query.sprintf("SELECT count(id_tu), id_tu FROM parsing_ref WHERE id_ship = %d and urutan_data_monita = %d", id_ship, urutan);
 
+#if 1
     q->prepare(query);
     if(!q->exec()){
         printf("err():\n");
@@ -39,6 +40,7 @@ int get_db::id_tu_ship(QSqlQuery *q, int id_ship, int urutan){
             }
         }
     }
+#endif
 }
 
 void get_db::modem_info(QSqlQuery *q, utama *marine){
@@ -69,7 +71,13 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
 
             count++;
         }
-        marine->sum_ship = count;
-        printf("Initialization                                          [DONE]\n");
     }
+
+    marine->sum_ship = count;
+
+    printf("Get Num of Ship : %d\n\nList of Ship :\n", marine->sum_ship);
+    for (int i = 0; i < marine->sum_ship; i++){
+        printf("%d. id_ship : %d , Name : %s , Modem_id : %s\n", i+1, marine->kapal[i].id_ship, marine->kapal[i].name, marine->kapal[i].modem_id);
+    }
+    printf("\nInitialization                                          [DONE]\n");
 }

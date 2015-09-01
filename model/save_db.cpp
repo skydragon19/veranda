@@ -5,8 +5,7 @@ save_db::save_db()
 }
 
 void save_db::data(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time){
-    printf("\n%f, %d, %d, %d, %s", value, id_tu, id_trip, epochtime, data_time.toLocal8Bit().data());
-
+#if 1
     q->prepare("REPLACE INTO data(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)");
 
     q->bindValue(":id_titik_ukur", id_tu);
@@ -16,6 +15,7 @@ void save_db::data(QSqlQuery *q, float value, int id_tu, int id_trip, int epocht
     q->bindValue(":data_time", data_time.toLocal8Bit().data());
 
     q->exec();
+#endif
 }
 
 void save_db::update_next_utc(QSqlQuery *q, QString next_utc, int id_ship){
