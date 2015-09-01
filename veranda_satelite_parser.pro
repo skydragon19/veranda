@@ -25,7 +25,8 @@ SOURCES += main.cpp \
     controller/worker.cpp \
     model/save_db.cpp \
     model/init_mysql.cpp \
-    util/parsing_fuction.cpp
+    util/parsing_fuction.cpp \
+    model/veranda_log.cpp
 
 HEADERS += \
     util/util_skyw.h \
@@ -34,4 +35,5 @@ HEADERS += \
     model/save_db.h \
     model/init_mysql.h \
     util/parsing_fuction.h \
-    util/utama.h
+    util/utama.h \
+    model/veranda_log.h

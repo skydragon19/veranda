@@ -37,6 +37,7 @@ private slots:
     void replyFinished(QNetworkReply* reply);
 
 private:
+
     struct utama *marine;
 
     QNetworkAccessManager *manager;

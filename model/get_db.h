@@ -9,7 +9,6 @@
 
 #include <util/utama.h>
 
-
 class get_db
 {
 public:

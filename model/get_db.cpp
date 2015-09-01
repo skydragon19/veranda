@@ -44,6 +44,10 @@ int get_db::id_tu_ship(QSqlQuery *q, int id_ship, int urutan){
 }
 
 void get_db::modem_info(QSqlQuery *q, utama *marine){
+    printf("Ship list :\n");
+
+    QString str;
+
     int count = 0;
 
     q->prepare("SELECT s.id_ship, s.name, s.modem_id, s.access_id, s.password, s.nextutc, s.SIN, s.MIN, g.url FROM ship s join gateway g on g.id = s.gateway where s.status = 1");
@@ -67,8 +71,6 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
             marine->kapal[count].MIN = q->value(7).toInt();
             strcpy(marine->kapal[count].gateway, q->value(8).toString().toLatin1());
 
-            printf("\n %s", marine->kapal[count].name);
-
             count++;
         }
     }
@@ -79,5 +81,5 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
     for (int i = 0; i < marine->sum_ship; i++){
         printf("%d. id_ship : %d , Name : %s , Modem_id : %s\n", i+1, marine->kapal[i].id_ship, marine->kapal[i].name, marine->kapal[i].modem_id);
     }
-    printf("\nInitialization                                          [DONE]\n");
+    printf("Initialization                                          [DONE]\n");
 }

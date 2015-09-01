@@ -113,21 +113,16 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
     char dats[dat.size()+1];
     strcpy(dats, dat.toLatin1());
 
-#if 1
-    int cnt_df = 0;
-
     for (int i = 0; i < dat.size(); i++){
         cnt_p++;
         data.sprintf("%s%c", data.toLocal8Bit().data(), dats[i]);
 
         if (cnt_p == 32){
             cnt_d++;
+
             decimal = bin_to_decimal(data);
-
             data_f = *(float *) &decimal;
-            cnt_df++;
-
-#if 1 /* hasil parsing n data float */
+    /* hasil parsing n data float */
             if (cnt_d == 1){
                 epochtime = (int) data_f;
                 const QDateTime time = QDateTime::fromTime_t((((int)data_f)));
@@ -137,19 +132,18 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
                 q->clear();
                 int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
-                    printf("\n%d", id_tu);
+                    printf("%d --> %.2f\n", id_tu, data_f);
+                    q->clear();
                     save.data(q, data_f, id_tu, 0, epochtime, dat_time);
                 }
                 else{
                     printf("\nbelum di set parsing_ref nya");
                 }
             }
-#endif
             data = "";
             cnt_p = 0;
         }
     }
-#endif
 }
 
 int parsing_function::bin_to_decimal(QString dat32){

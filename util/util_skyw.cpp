@@ -54,6 +54,7 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
 
                 /* SkyWave - Imani Prima */
                 if (xml.name() == "RawPayload"){
+                    printf("\nDate Time : %s (+07:00)\n", MessageUTC.toUtf8().data());
                     RawPayload.sprintf("%s", xml.readElementText().toUtf8().data());
 
                     decode.clear();
@@ -70,6 +71,7 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
 
                 /* SkyWave - KurayGeo */
                 if (xml.name() == "Payload"){
+                    printf("\nDate Time : %s (+07:00)\n", MessageUTC.toUtf8().data());
                     cnt = 0;
                     cnt_tu = 1;
                 }
@@ -93,6 +95,7 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
                         int id_tu = get.id_tu_ship(q, id_ship, cnt_tu);
                         if (id_tu != 0){
                             q->clear();
+                            printf("%d --> %.2f\n", id_tu, data_f);
                             save.data(q, data_f, id_tu, 0, epochtime, dat_time);
                         }
                         else{
