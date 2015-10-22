@@ -1,6 +1,8 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
+    /** ISAYANAMOY **/
+
     this->initNetworkManager();
 
     printf("Initialization Database\n");
