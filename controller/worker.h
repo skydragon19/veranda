@@ -39,6 +39,7 @@ private slots:
 private:
 
     struct utama *marine;
+    struct account *acc;
 
     QNetworkAccessManager *manager;
 
@@ -55,6 +56,7 @@ private:
     int cek_replay;
 
     int ship_count;
+    int gateway_count;
 
     QString urls;
 

@@ -46,11 +46,9 @@ int get_db::id_tu_ship(QSqlQuery *q, int id_ship, int urutan){
 void get_db::modem_info(QSqlQuery *q, utama *marine){
     printf("Ship list :\n");
 
-    QString str;
-
     int count = 0;
 
-    q->prepare("SELECT s.id_ship, s.name, s.modem_id, s.access_id, s.password, s.nextutc, s.SIN, s.MIN, g.url FROM ship s join gateway g on g.id = s.gateway where s.status = 1");
+    q->prepare("SELECT id_ship, name, modem_id FROM ship where status = 1");
     if(!q->exec()){
         printf("Initialization                                          [FAILED]\n");
     }
@@ -59,17 +57,6 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
             marine->kapal[count].id_ship =  q->value(0).toInt();
             strcpy(marine->kapal[count].name, q->value(1).toString().toLatin1());
             strcpy(marine->kapal[count].modem_id, q->value(2).toString().toLatin1());
-            strcpy(marine->kapal[count].access_id, q->value(3).toString().toLatin1());
-            strcpy(marine->kapal[count].password, q->value(4).toString().toLatin1());
-            if(q->value(5).toString() == ""){
-                strcpy(marine->kapal[count].nextutc, QDateTime::currentDateTime().toString("yyyy-MM-dd 00:00:00").toLatin1());
-            }
-            else{
-                strcpy(marine->kapal[count].nextutc, q->value(5).toDateTime().toString("yyyy-MM-dd hh:mm:ss").toLatin1());
-            }
-            marine->kapal[count].SIN = q->value(6).toInt();
-            marine->kapal[count].MIN = q->value(7).toInt();
-            strcpy(marine->kapal[count].gateway, q->value(8).toString().toLatin1());
 
             count++;
         }
@@ -82,4 +69,39 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
         printf("%d. id_ship : %d , Name : %s , Modem_id : %s\n", i+1, marine->kapal[i].id_ship, marine->kapal[i].name, marine->kapal[i].modem_id);
     }
     printf("Initialization                                          [DONE]\n");
+}
+
+void get_db::modem_getway(QSqlQuery *q, account *acc){
+    int n = 0;
+
+    q->prepare("SELECT id, url, access_id, password, next_utc, SIN, MIN from gateway");
+    if(!q->exec()){
+        printf("Initialization                                          [FAILED]");
+    }
+    else{
+        while(q->next()){
+             QString qStr;
+
+             int id = q->value(0).toInt();
+             QString getway = q->value(1).toString();
+             QString access_id = q->value(2).toString();
+             QString password = q->value(3).toString();
+             QDateTime nextutc = q->value(4).toDateTime();
+             int SIN = q->value(5).toInt();
+             int MIN = q->value(6).toInt();
+
+             qStr.sprintf("%sget_return_messages.xml/?access_id=%s&password=%s&start_utc=",
+                          getway.toUtf8().data(), access_id.toUtf8().data(), password.toUtf8().data());
+
+             acc->gway[n].id = id;
+             strcpy(acc->gway[n].link, qStr.toLatin1());
+             strcpy(acc->gway[n].nextutc, nextutc.toString("yyyy-MM-dd%20hh:mm:ss").toUtf8().data());
+             acc->gway[n].SIN = SIN;
+             acc->gway[n].MIN = MIN;
+
+             n++;
+        }
+    }
+
+    acc->sum_getway = n;
 }

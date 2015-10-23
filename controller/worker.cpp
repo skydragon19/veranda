@@ -1,8 +1,6 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
-    /** ISAYANAMOY **/
-
     this->initNetworkManager();
 
     printf("Initialization Database\n");
@@ -16,11 +14,16 @@ Worker::Worker(QObject *parent) : QObject(parent){
     marine = (struct utama *) malloc( sizeof (struct utama));
     memset((char *) marine, 0, sizeof(struct utama));
 
+    acc = (struct account *) malloc ( sizeof (struct account));
+    memset((char *) acc, 0, sizeof(struct account));
+
     printf("Initialization memory\n");
     qsql->clear();
     get.modem_info(qsql, marine);
+    get.modem_getway(qsql, acc);
 
     ship_count = 0;
+    gateway_count = 0;
     cnt_panggil = 0;
 
     this->doWork();
@@ -42,13 +45,9 @@ void Worker::doWork(){
 
 
 void Worker::getResponSkyW(){
-    printf("Request --> %s ; MobileID [%s]\n", marine->kapal[ship_count].name, marine->kapal[ship_count].modem_id);
-
     QNetworkRequest request;
 
-    urls.sprintf("%sget_return_messages.xml/?access_id=%s&password=%s&start_utc=%s&mobile_id=%s",
-                  marine->kapal[ship_count].gateway, marine->kapal[ship_count].access_id, marine->kapal[ship_count].password,
-                  marine->kapal[ship_count].nextutc, marine->kapal[ship_count].modem_id);
+    urls.sprintf("%s%s", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
 
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
 
@@ -59,24 +58,25 @@ void Worker::getResponSkyW(){
     printf("Waiting for reply ..\n");
 }
 
-void Worker::replyFinished(QNetworkReply* reply){            
-    printf("Get Respond from --> %s\n", marine->kapal[ship_count].name);
+void Worker::replyFinished(QNetworkReply* reply){
+    QString xmlStr;
+    xmlStr.clear();
 
-    QString readAll;
-    readAll.clear();
+    if (gateway_count == 0) printf("Get Respond from --> KurayGeo\n");
+    else if (gateway_count == 1) printf("Get Respond from --> ImaniPrima\n");
 
-    readAll=reply->readAll();
-    read.parse_xml(readAll, qsql, marine->kapal[ship_count].id_ship, marine->kapal[ship_count].SIN, marine->kapal[ship_count].MIN, marine, ship_count);
+    xmlStr=reply->readAll();
+    read.parse_xml_account_methode(xmlStr, qsql, marine, acc, acc->gway[gateway_count].id);
 
-    ship_count++;
+    gateway_count++;
 
-    if (ship_count < marine->sum_ship){
+    if (gateway_count < acc->sum_getway){
         this->getResponSkyW();
-    }else{
-        cnt_panggil++;
-        printf("\nHABIS --> call ke %d\n", cnt_panggil);
+    }
+    else{
+        printf("---== Selsai ==---\n");
 
-        ship_count = 0;
+        gateway_count = 0;
         timer.start(1000 * 60 * 10);
     }
 }
