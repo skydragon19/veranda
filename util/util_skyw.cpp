@@ -259,6 +259,8 @@ void util_skyw::parse_kureyGeo(QString skyw, QSqlQuery *q, utama *marine, accoun
             }
 
             if(id_match){
+                save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
+
                 if (xml.name() == "Payload"){
                     QXmlStreamAttributes attributes = xml.attributes();
 
