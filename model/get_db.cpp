@@ -74,7 +74,7 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
 void get_db::modem_getway(QSqlQuery *q, account *acc){
     int n = 0;
 
-    q->prepare("SELECT id, url, access_id, password, next_utc, SIN, MIN from gateway");
+    q->prepare("SELECT id, url, access_id, password, next_utc, SIN, MIN, status from gateway");
     if(!q->exec()){
         printf("Initialization                                          [FAILED]");
     }
@@ -82,26 +82,29 @@ void get_db::modem_getway(QSqlQuery *q, account *acc){
         while(q->next()){
              QString qStr;
 
-             int id = q->value(0).toInt();
-             QString getway = q->value(1).toString();
-             QString access_id = q->value(2).toString();
-             QString password = q->value(3).toString();
-             QDateTime nextutc = q->value(4).toDateTime();
-             int SIN = q->value(5).toInt();
-             int MIN = q->value(6).toInt();
+             int status_active = q->value((7)).toInt();
 
-             qStr.sprintf("%sget_return_messages.xml/?access_id=%s&password=%s&start_utc=",
-                          getway.toUtf8().data(), access_id.toUtf8().data(), password.toUtf8().data());
+             if(status_active){
+                 int id = q->value(0).toInt();
+                 QString getway = q->value(1).toString();
+                 QString access_id = q->value(2).toString();
+                 QString password = q->value(3).toString();
+                 QDateTime nextutc = q->value(4).toDateTime();
+                 int SIN = q->value(5).toInt();
+                 int MIN = q->value(6).toInt();
 
-             acc->gway[n].id = id;
-             strcpy(acc->gway[n].link, qStr.toLatin1());
-             strcpy(acc->gway[n].nextutc, nextutc.toString("yyyy-MM-dd%20hh:mm:ss").toUtf8().data());
-             acc->gway[n].SIN = SIN;
-             acc->gway[n].MIN = MIN;
+                 qStr.sprintf("%sget_return_messages.xml/?access_id=%s&password=%s&start_utc=",
+                              getway.toUtf8().data(), access_id.toUtf8().data(), password.toUtf8().data());
 
-             n++;
+                 acc->gway[n].id = id;
+                 strcpy(acc->gway[n].link, qStr.toLatin1());
+                 strcpy(acc->gway[n].nextutc, nextutc.toString("yyyy-MM-dd%20hh:mm:ss").toUtf8().data());
+                 acc->gway[n].SIN = SIN;
+                 acc->gway[n].MIN = MIN;
+
+                 n++;
+             }
         }
     }
-
     acc->sum_getway = n;
 }

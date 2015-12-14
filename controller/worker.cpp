@@ -8,8 +8,9 @@ Worker::Worker(QObject *parent) : QObject(parent){
 
     qsql = new QSqlQuery(db);
 
+    printf("\nApplication Running : %s \n", QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().data());
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
-    timer.start(1000 * 60 * 10); /* 10 menit */
+    timer.start((1000 * 60 * 10) / 2); /* 5 menit */
 
     marine = (struct utama *) malloc( sizeof (struct utama));
     memset((char *) marine, 0, sizeof(struct utama));
@@ -47,7 +48,8 @@ void Worker::doWork(){
 void Worker::getResponSkyW(){
     QNetworkRequest request;
 
-    urls.sprintf("%s%s", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
+    urls.sprintf("%s%s&mobile_id=01093515SKY07F4", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
+    printf("\n%s\n", urls.toUtf8().data());
 
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
 
@@ -59,11 +61,12 @@ void Worker::getResponSkyW(){
 }
 
 void Worker::replyFinished(QNetworkReply* reply){
+    printf("\nStart : %s \n", QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().data());
     QString xmlStr;
     xmlStr.clear();
 
-    if (gateway_count == 0) printf("Get Respond from --> KurayGeo\n");
-    else if (gateway_count == 1) printf("Get Respond from --> ImaniPrima\n");
+    if (acc->gway[gateway_count].id == 1) printf("Get Respond from --> KurayGeo\n");
+    else if (acc->gway[gateway_count].id == 2) printf("Get Respond from --> ImaniPrima\n");
 
     xmlStr=reply->readAll();
     read.parse_xml_account_methode(xmlStr, qsql, marine, acc, acc->gway[gateway_count].id);
@@ -76,7 +79,9 @@ void Worker::replyFinished(QNetworkReply* reply){
     else{
         printf("---== Selsai ==---\n");
 
+        printf("\nFinished : %s \n", QDateTime::currentDateTime().toString("hh:mm:ss").toUtf8().data());
+
         gateway_count = 0;
-        timer.start(1000 * 60 * 10);
+        timer.start((1000 * 60 * 10) / 2);
     }
 }

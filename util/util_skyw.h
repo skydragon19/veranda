@@ -33,6 +33,11 @@ private:
     save_db save;
     parsing_function parse;
 
+    QString name_df[5];
+    float dat_f[5];
+    int tu_df[5];
+    int cnt_df;
+
     int jum_dat;
 };
 
