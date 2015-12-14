@@ -366,8 +366,12 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
             }
 
             if(id_match){
-                save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
                 if(xml.name() == "RawPayload"){
+                    save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
+
+                    printf("\nGet data kapal : %s , mobilde id : %s , Time (UTC) : %s\n",
+                           marine->kapal[n].name, marine->kapal[n].modem_id, MessageUTC.toUtf8().data());
+
                     RawPayload.clear();
                     RawPayload.sprintf("%s", xml.readElementText().toUtf8().data());
 
@@ -384,6 +388,10 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                 }
 
                 if(xml.name() == "Payload"){
+                    save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
+
+                    printf("\nGet data tracking : %s , mobilde id : %s , Time (UTC) : %s\n",
+                           marine->kapal[n].name, marine->kapal[n].modem_id, MessageUTC.toUtf8().data());
                     QXmlStreamAttributes attributes = xml.attributes();
 
                     attributes_name = attributes.value("Name").toString();
@@ -448,7 +456,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                                 for(int i = 0; i < cnt_df; i++){
                                     const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
-                                    printf("\n data : %s , id_tu : %d => value : %.2f ; epochtime : %d , datetime : %s", name_df[i].toUtf8().data(),
+                                    printf("\ndata : %s , id_tu : %d => value : %.2f ; epochtime : %d , datetime : %s", name_df[i].toUtf8().data(),
                                            tu_df[i], dat_f[i], epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
 
                                     save.data(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());

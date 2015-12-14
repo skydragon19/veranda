@@ -48,7 +48,7 @@ void Worker::doWork(){
 void Worker::getResponSkyW(){
     QNetworkRequest request;
 
-    urls.sprintf("%s%s&mobile_id=01093515SKY07F4", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
+    urls.sprintf("%s%s", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
     printf("\n%s\n", urls.toUtf8().data());
 
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
