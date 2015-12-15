@@ -3,12 +3,18 @@
 
 #include "util/utama.h"
 
+
 class veranda_log
 {
 public:
     veranda_log();
 
-    void write(QString log);
+    int nomer;
+    char *buf_lay;
+    char *buf_no;
+    char *buf_dateTime;
+
+    void write(QFile *file, const char *text, ...);
 };
 
 #endif // VERANDA_LOG_H

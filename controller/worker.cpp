@@ -1,9 +1,20 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
-    this->initNetworkManager();
+    fileName.sprintf("%s/log/log.txt", QDir::currentPath().toUtf8().data());
 
+    QFile file(fileName);
+
+    files = &file;
+    files->open(QIODevice::WriteOnly);
+
+    vlog.write(files, "Veranda Satelite Parser is Running");
+
+    this->initNetworkManager(files);
+
+#if 0
     printf("Initialization Database\n");
+
     db = mysql.connect_db();
 
     qsql = new QSqlQuery(db);
@@ -28,11 +39,14 @@ Worker::Worker(QObject *parent) : QObject(parent){
     cnt_panggil = 0;
 
     this->doWork();
+#endif
 }
 
-void Worker::initNetworkManager(){
+void Worker::initNetworkManager(QFile *file){
     manager = new QNetworkAccessManager();
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
+
+    vlog.write(file, "Success Initialization Network Manager");
 }
 
 void Worker::CheckForRequest(){

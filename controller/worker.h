@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QDateTime>
 
+
 #include <QUrl>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
@@ -18,6 +19,7 @@
 
 #include "../model/get_db.h";
 #include "../model/init_mysql.h"
+#include "../model/veranda_log.h"
 
 class Worker : public QObject
 {
@@ -47,6 +49,8 @@ private:
     QTimer timer;
     util_skyw read;
     get_db get;
+    veranda_log vlog;
+
     //skywaveNetwork skw;
 
     int cnt_panggil;
@@ -67,7 +71,12 @@ private:
     QSqlDatabase db;
     QSqlQuery *qsql;
 
-    void initNetworkManager();
+    void initNetworkManager(QFile *file);
+
+    /** log **/
+    QString fileName;
+    QFile *files;
+    QTextStream *outStreams;
 };
 
 #endif // TIMER_H

@@ -3,7 +3,11 @@
 
 #include <QString>
 
-#include <QFile>
+#include "QFile"
+#include "QTextStream"
+#include "QTime"
+#include "QDateTime"
+
 #include <QIODevice>
 
 #define  MODEM_KURAYGEO   1
