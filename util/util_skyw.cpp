@@ -391,19 +391,23 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                                    cnt_df++;
                                 }
                                 else{
+                                    QString data_raw;
+
+                                    data_raw.clear();
+
                                     for(int i = 0; i < cnt_df; i++){
                                         const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
-                                        printf("\ndata : %s , id_tu : %d => value : %.2f ; epochtime : %d , datetime : %s", name_df[i].toUtf8().data(),
-                                               tu_df[i], dat_f[i], epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
 
                                         save.data(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                     }
+
+                                    printf("%s\n", data_raw.toUtf8().data());
+
                                     cnt_df = 0;
                                 }
                             }
-
-
                         }
                     }
                 }

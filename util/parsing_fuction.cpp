@@ -101,6 +101,7 @@ QString parsing_function::format_5cut_32get(QString biner){
 }
 
 void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
+    QString data_raw;
     int epochtime;
     QString dat_time;
 
@@ -112,6 +113,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
 
     char dats[dat.size()+1];
     strcpy(dats, dat.toLatin1());
+
+    data_raw.clear();
 
     for (int i = 0; i < dat.size(); i++){
         cnt_p++;
@@ -132,7 +135,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
                 q->clear();
                 int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
-                    printf("%d --> %.2f\n", id_tu, data_f);
+                    data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), id_tu, data_f);
+
                     q->clear();
                     save.data(q, data_f, id_tu, 0, epochtime, dat_time);
                 }
@@ -144,6 +148,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
             cnt_p = 0;
         }
     }
+
+    printf("%s\n", data_raw.toUtf8().data());
 }
 
 int parsing_function::bin_to_decimal(QString dat32){
