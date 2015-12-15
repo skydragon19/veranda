@@ -3,10 +3,37 @@
 util_skyw::util_skyw(QObject *parent) :
     QObject(parent)
 {
+    buf_lay = (char *) malloc(1024);
+    buf_dateTime = (char *) malloc(32);
 }
 
-void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *marine, int urut){
+void util_skyw::write(QFile *file, const char *text, ...){
+
+    va_list args;
+    int i;
+
+    va_start (args, text);
+
+       /*
+        * For this to work, printbuffer must be larger than
+        * anything we ever want to print.
+        */
+
+    i = vsprintf (buf_lay, text, args);
+    va_end (args);
+
+    /* Print the string */
+    sprintf (buf_dateTime, " [%s]\r\n", QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), args);
+
+    strcat(buf_lay, buf_dateTime);
+
+    QTextStream printLog(file);
+    printLog << buf_lay;
+}
+
 #if 0
+void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *marine, int urut){
+
     printf("\nChecking for => id : %d --> SIN : %d --> modem id : %s --> kapal :%s\n",
            id_ship, SIN, marine->kapal[urut].modem_id, marine->kapal[urut].name);
 
@@ -108,106 +135,16 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
             }
         }
     }
-#endif
 }
+#endif
 
-void util_skyw::parse_xml_account_methode(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway){
-
-    printf("ID Gateway : %d\n", id_gateway);
-
+void util_skyw::parse_xml_account_methode(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway, QFile *file){
 #if 1
     if(id_gateway == MODEM_KURAYGEO){
         parse_kureyGeo(skyw, q, marine, acc, id_gateway);
     }
     else if(id_gateway == MODEM_IMANIPRIMA){
         parse_imaniPrima(skyw, q, marine, acc, id_gateway);
-    }
-#endif
-
-#if 0
-    int cnt = 0;
-    int cnt_tu = 1;
-    int n;
-
-    int epochtime;
-    QString dat_time;
-
-    QString MobileID;
-
-    QXmlStreamReader xml;
-
-    xml.clear();
-    xml.addData(skyw);
-
-    while(!xml.atEnd() &&  !xml.hasError()){
-        QXmlStreamReader::TokenType token = xml.readNext();
-        if(token == QXmlStreamReader::StartElement){
-            if (id_gateway == MODEM_KURAYGEO){
-                bool id_match = false;
-
-                if (xml.name() == "MobileID"){
-                    MobileID.sprintf("%s", xml.readElementText().toUtf8().data());
-                }
-
-                /* Filtering Mobile ID */
-                for(int i = 0; i < marine->sum_ship; i++){
-                    if(marine->kapal[i].modem_id == MobileID){
-                        n = i;
-                        id_match = true;
-                    }
-                }
-
-                if(id_match){
-                    if (xml.name() == "Payload"){
-                        QXmlStreamAttributes attributes = xml.attributes();
-
-                        QString name = attributes.value("Name").toString();
-                        QString sin = attributes.value("SIN").toString();
-                        QString min = attributes.value("MIN").toString();
-
-                        cnt = 0;
-                        cnt_tu = 1;
-                    }
-                    if (xml.name() == "Field"){
-                        QXmlStreamAttributes attributes = xml.attributes();
-
-                        QString name = attributes.value("Name").toString();
-                        int value = attributes.value("Value").toString().toInt();
-
-                        float data_f = *(float *) &value;
-
-                        if (cnt == 0){
-                            epochtime = (int) data_f;
-
-                            const QDateTime time = QDateTime::fromTime_t((int)data_f);
-                            dat_time = time.toString("yyyy-MM-dd hh:mm:ss").toLocal8Bit().data();
-
-                            cnt++;
-                        }
-                        else{
-                            q->clear();
-                            int id_tu = get.id_tu_ship(q, marine->kapal[n].id_ship, cnt_tu);
-                            if (id_tu != 0){
-                                q->clear();
-                                printf("%d --> %.2f\n", id_tu, data_f);
-                                save.data(q, data_f, id_tu, 0, epochtime, dat_time);
-                            }
-                            else{
-                                printf("\nbelum di set parsing refnya");
-                            }
-                            cnt_tu++;
-                        }
-                    }
-                }
-            }
-            else if(id_gateway == MODEM_IMANIPRIMA){
-                if (xml.name() == "MobileID"){
-                    MobileID.sprintf("%s", xml.readElementText().toUtf8().data());
-                    printf("MobileID => %s [Imani Prima]\n", MobileID.toUtf8().data());
-                }
-            }
-        }
-
     }
 #endif
 }
@@ -337,7 +274,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
     while(!xml.atEnd() &&  !xml.hasError()){
         QXmlStreamReader::TokenType token = xml.readNext();
         if(token == QXmlStreamReader::StartElement){
-#if 1
             bool id_match = false;
 
             if (xml.name() == "MessageUTC"){
@@ -472,8 +408,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                     }
                 }
             }
-#endif
         }
-
     }
 }

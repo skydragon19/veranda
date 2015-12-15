@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QXmlStreamReader>
 #include <QDebug>
+#include <QDir>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -18,9 +19,12 @@ class util_skyw : public QObject
     Q_OBJECT
 public:
     explicit util_skyw(QObject *parent = 0);
-    void parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *kapal, int urut);
 
-    void parse_xml_account_methode(QString skyw, QSqlQuery *q, struct utama *marine, struct account *acc, int id_gateway);
+#if 0
+    void parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *kapal, int urut);
+#endif
+
+    void parse_xml_account_methode(QString skyw, QSqlQuery *q, struct utama *marine, struct account *acc, int id_gateway, QFile *file);
     void parse_kureyGeo(QString skyw, QSqlQuery *q, struct utama *marine, struct account *acc, int id_gateway);
     void parse_imaniPrima(QString skyw, QSqlQuery *q, struct utama *marine, struct account *acc, int id_gateway);
 
@@ -39,6 +43,11 @@ private:
     int cnt_df;
 
     int jum_dat;
+
+    char *buf_lay;
+    char *buf_dateTime;
+
+    void write(QFile *file, const char *text, ...);
 };
 
 #endif // UTIL_SKYW_H

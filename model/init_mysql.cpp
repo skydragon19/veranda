@@ -4,7 +4,7 @@ init_mysql::init_mysql()
 {
 }
 
-QSqlDatabase init_mysql::connect_db(){
+QSqlDatabase init_mysql::connect_db(QFile *file){
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
     db.setDatabaseName("marine_1");
@@ -12,10 +12,10 @@ QSqlDatabase init_mysql::connect_db(){
     db.setPassword("rqi");
 
     if(db.open()){
-        printf("Initialization                                          [DONE]\n");
+        vlog.write(file, "Success Initialization Database");
     }
     else{
-        printf("Initialization                                          [FAILED]\n");
+        vlog.write(file, "Failed Initialization Database");
     }
 
     return (QSqlDatabase) db;

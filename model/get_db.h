@@ -16,8 +16,10 @@ public:
 
     int sum_ship(QSqlDatabase db);
     int id_tu_ship(QSqlQuery *q, int id_ship, int urutan);
-    void modem_info(QSqlQuery *q, struct utama *marine);
-    void modem_getway(QSqlQuery *q, struct account *acc);
+    void modem_info(QSqlQuery *q, struct utama *marine, QFile *file);
+    void modem_getway(QSqlQuery *q, struct account *acc, QFile *file);
+
+    veranda_log vlog;
 };
 
 #endif // GET_DB_H

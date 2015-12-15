@@ -9,9 +9,7 @@ class veranda_log
 public:
     veranda_log();
 
-    int nomer;
     char *buf_lay;
-    char *buf_no;
     char *buf_dateTime;
 
     void write(QFile *file, const char *text, ...);

@@ -43,14 +43,14 @@ int get_db::id_tu_ship(QSqlQuery *q, int id_ship, int urutan){
 #endif
 }
 
-void get_db::modem_info(QSqlQuery *q, utama *marine){
-    printf("Ship list :\n");
+void get_db::modem_info(QSqlQuery *q, utama *marine, QFile *file){
+    vlog.write(file, "Get ship list :");
 
     int count = 0;
 
     q->prepare("SELECT id_ship, name, modem_id FROM ship where status = 1");
     if(!q->exec()){
-        printf("Initialization                                          [FAILED]\n");
+        vlog.write(file, "Failed Initialization ship list");
     }
     else{
         while(q->next()){
@@ -64,19 +64,20 @@ void get_db::modem_info(QSqlQuery *q, utama *marine){
 
     marine->sum_ship = count;
 
-    printf("Get Num of Ship : %d\n\nList of Ship :\n", marine->sum_ship);
     for (int i = 0; i < marine->sum_ship; i++){
-        printf("%d. id_ship : %d , Name : %s , Modem_id : %s\n", i+1, marine->kapal[i].id_ship, marine->kapal[i].name, marine->kapal[i].modem_id);
+        vlog.write(file, "id_ship : %d , Name : %s , Modem_id : %s", marine->kapal[i].id_ship, marine->kapal[i].name, marine->kapal[i].modem_id);
     }
-    printf("Initialization                                          [DONE]\n");
+    vlog.write(file, "Success Initialization Ship list");
 }
 
-void get_db::modem_getway(QSqlQuery *q, account *acc){
+void get_db::modem_getway(QSqlQuery *q, account *acc, QFile *file){
+    vlog.write(file, "Get gateway list :");
+
     int n = 0;
 
     q->prepare("SELECT id, url, access_id, password, next_utc, SIN, MIN, status from gateway");
     if(!q->exec()){
-        printf("Initialization                                          [FAILED]");
+        vlog.write(file, "Failde Initialization gateway");
     }
     else{
         while(q->next()){
@@ -103,8 +104,11 @@ void get_db::modem_getway(QSqlQuery *q, account *acc){
                  acc->gway[n].MIN = MIN;
 
                  n++;
+
+                 vlog.write(file, "Gateway active : \n    %s", qStr.toUtf8().data());
              }
         }
     }
     acc->sum_getway = n;
+    vlog.write(file, "Success Initialization Gateway");
 }
