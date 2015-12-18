@@ -116,6 +116,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
 
     data_raw.clear();
 
+    index = 0;
+
     for (int i = 0; i < dat.size(); i++){
         cnt_p++;
         data.sprintf("%s%c", data.toLocal8Bit().data(), dats[i]);
@@ -125,7 +127,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
 
             decimal = bin_to_decimal(data);
             data_f = *(float *) &decimal;
-    /* hasil parsing n data float */
+
+            /* hasil parsing n data float */
             if (cnt_d == 1){
                 epochtime = (int) data_f;
                 const QDateTime time = QDateTime::fromTime_t((((int)data_f)));
@@ -135,10 +138,16 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
                 q->clear();
                 int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
+#if 0
                     data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), id_tu, data_f);
-
                     q->clear();
                     save.data(q, data_f, id_tu, 0, epochtime, dat_time);
+#else
+                    measurement_point[index] = id_tu;
+                    data_vtes[index] = (float) data_f;
+
+                    index++;
+#endif
                 }
                 else{
                     printf("\nbelum di set parsing_ref nya");
@@ -147,6 +156,11 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
             data = "";
             cnt_p = 0;
         }
+    }
+
+    for (int i = 0; i < index; i++){
+        qDebug("'%d' = [%.2f]", measurement_point[i], data_vtes[i]);
+        save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
     }
 
     printf("%s\n", data_raw.toUtf8().data());

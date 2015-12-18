@@ -244,6 +244,7 @@ void util_skyw::parse_kureyGeo(QString skyw, QSqlQuery *q, utama *marine, accoun
 }
 
 void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway){
+#if 1
     int cnt = 0;
     int cnt_tu = 1;
     int n;
@@ -278,7 +279,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
             if (xml.name() == "MessageUTC"){
                 MessageUTC.sprintf("%s", xml.readElementText().toUtf8().data());
-                save.update_next_utc_gateway(q, MessageUTC, id_gateway);
 
                 strcpy(acc->gway[id_gateway-1].nextutc, MessageUTC.toLatin1());
                 tracking_data = 0;
@@ -305,8 +305,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
                 if(id_match){
                     if(xml.name() == "RawPayload"){
-                        save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
-
                         printf("\nGet data kapal : %s , mobilde id : %s , Time (UTC) : %s\n",
                                marine->kapal[n].name, marine->kapal[n].modem_id, MessageUTC.toUtf8().data());
 
@@ -326,8 +324,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                     }
 
                     if(xml.name() == "Payload"){
-                        save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
-
                         printf("\nGet data tracking : %s , mobilde id : %s , Time (UTC) : %s\n",
                                marine->kapal[n].name, marine->kapal[n].modem_id, MessageUTC.toUtf8().data());
                         QXmlStreamAttributes attributes = xml.attributes();
@@ -399,7 +395,6 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                                         const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
                                         data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
-
                                         save.data(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                     }
 
@@ -410,8 +405,14 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                             }
                         }
                     }
+                    q->clear();
+                    save.update_next_utc_gateway(q, MessageUTC, id_gateway);
+
+                    q->clear();
+                    save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
                 }
             }
         }
     }
+#endif
 }

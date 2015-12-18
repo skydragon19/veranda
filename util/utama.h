@@ -15,6 +15,8 @@
 #define  MODEM_KURAYGEO   1
 #define  MODEM_IMANIPRIMA 2
 
+#define  MAX_MEASUREMENT_POINT 50
+
 struct ship{
     int id_ship;
     char name[32];

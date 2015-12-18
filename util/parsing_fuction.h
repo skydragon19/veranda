@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QDateTime>
 
+#include <util/utama.h>
+
 #include <model/get_db.h>
 #include <model/save_db.h>
 
@@ -29,6 +31,10 @@ public:
 private:
     get_db get;
     save_db save;
+
+    float data_vtes[MAX_MEASUREMENT_POINT];
+    int measurement_point[MAX_MEASUREMENT_POINT];
+    int index;
 
 };
 
