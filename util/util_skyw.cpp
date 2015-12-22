@@ -269,6 +269,8 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
     int attributes_MIN;
     int tracking_data = 0;
 
+    int f_mUTC;
+
     xml.clear();
     xml.addData(skyw);
 
@@ -279,11 +281,13 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
             if (xml.name() == "MessageUTC"){
                 MessageUTC.sprintf("%s", xml.readElementText().toUtf8().data());
+                f_mUTC = parse.get_date(MessageUTC);
 
                 strcpy(acc->gway[id_gateway-1].nextutc, MessageUTC.toLatin1());
                 tracking_data = 0;
                 cnt_df = 0;
             }
+#if 1
 
             if (xml.name() == "SIN"){
                 SIN = xml.readElementText().toInt();
@@ -291,6 +295,11 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
 
             if(SIN == 128 || SIN == 19){
+                bool table_found = get.check_table_is_available(q, f_mUTC);
+                if(!table_found){
+                    save.create_tabel_data_harian(q, f_mUTC);
+                }
+#if 1
                 if (xml.name() == "MobileID"){
                     MobileID.sprintf("%s", xml.readElementText().toUtf8().data());
                 }
@@ -320,7 +329,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                         f_5c32g.clear();
                         f_5c32g = parse.format_5cut_32get(bin);
 
-                        parse.parse_data(q, f_5c32g, marine->kapal[n].id_ship);
+                        parse.parse_data(q, f_5c32g, marine->kapal[n].id_ship, f_mUTC);
                     }
 
                     if(xml.name() == "Payload"){
@@ -396,6 +405,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
                                         data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
                                         save.data(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        save.data_harian(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
                                     }
 
                                     printf("%s\n", data_raw.toUtf8().data());
@@ -411,7 +421,9 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                     q->clear();
                     save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
                 }
+#endif
             }
+#endif
         }
     }
 #endif

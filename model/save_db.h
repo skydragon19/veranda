@@ -13,9 +13,12 @@ public:
     save_db();
 
     void data(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time);
-    void update_next_utc(QSqlQuery *q, QString next_utc, int id_ship);
+    void data_harian(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time, int index);
 
+    void update_next_utc(QSqlQuery *q, QString next_utc, int id_ship);
     void update_next_utc_gateway(QSqlQuery *q, QString next_utc, int id_gateway);
+
+    void create_tabel_data_harian(QSqlQuery *q, int index);
 };
 
 #endif // SAVE_DB_H

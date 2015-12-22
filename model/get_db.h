@@ -19,6 +19,8 @@ public:
     void modem_info(QSqlQuery *q, struct utama *marine, QFile *file);
     void modem_getway(QSqlQuery *q, struct account *acc, QFile *file);
 
+    bool check_table_is_available(QSqlQuery *q, int index);
+
     veranda_log vlog;
 };
 

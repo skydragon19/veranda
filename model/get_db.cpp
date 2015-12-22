@@ -112,3 +112,13 @@ void get_db::modem_getway(QSqlQuery *q, account *acc, QFile *file){
     acc->sum_getway = n;
     vlog.write(file, "Success Initialization Gateway");
 }
+
+bool get_db::check_table_is_available(QSqlQuery *q, int index){
+    QString query;
+
+    query.clear();
+    query.sprintf("select * from data_%d", index);
+    q->prepare(query);
+
+    return (bool) q->exec();
+}
