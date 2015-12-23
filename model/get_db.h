@@ -6,7 +6,6 @@
 #include <QSqlQuery>
 
 #include <QDateTime>
-
 #include <util/utama.h>
 
 class get_db

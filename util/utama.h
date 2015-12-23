@@ -10,7 +10,8 @@
 
 #include <QIODevice>
 
-#include "../model/veranda_log.h"
+#include <../model/init_mysql.h>
+#include <../model/veranda_log.h>
 
 #define  MODEM_KURAYGEO   1
 #define  MODEM_IMANIPRIMA 2

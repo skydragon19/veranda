@@ -20,8 +20,6 @@ void save_db::data_harian(QSqlQuery *q, float value, int id_tu, int id_trip, int
     QString query;
     query.sprintf("REPLACE INTO data_%d(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)", index);
 
-    qDebug() << query;
-
     q->prepare(query);
 
     q->bindValue(":id_titik_ukur", id_tu);

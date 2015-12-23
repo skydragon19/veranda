@@ -111,6 +111,8 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
     int decimal;
     QString data = "";
 
+    bool ambil_data = false;
+
     char dats[dat.size()+1];
     strcpy(dats, dat.toLatin1());
 
@@ -146,6 +148,12 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
                     measurement_point[index] = id_tu;
                     data_vtes[index] = (float) data_f;
 
+                    if(index > 3 && ambil_data == false){
+                        if(data_f != 0.00){
+                            ambil_data = true;
+                        }
+                    }
+
                     index++;
 #endif
                 }
@@ -158,10 +166,12 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
         }
     }
 
-    for (int i = 0; i < index; i++){
-        qDebug("'%d' = [%.2f]", measurement_point[i], data_vtes[i]);
-        save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
-        save.data_harian(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time, f_mUTC);
+    if(ambil_data){
+        for (int i = 0; i < index; i++){
+            qDebug("'%d' = [%.2f]", measurement_point[i], data_vtes[i]);
+            save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
+            save.data_harian(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time, f_mUTC);
+        }
     }
 
     printf("%s\n", data_raw.toUtf8().data());

@@ -11,12 +11,7 @@ QSqlDatabase init_mysql::connect_db(QFile *file){
     db.setUserName("root");
     db.setPassword("rqi");
 
-    if(db.open()){
-        vlog.write(file, "Success Initialization Database");
-    }
-    else{
-        vlog.write(file, "Failed Initialization Database");
-    }
+    db.open();
 
     return (QSqlDatabase) db;
 }

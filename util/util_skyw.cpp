@@ -418,8 +418,8 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                     q->clear();
                     save.update_next_utc_gateway(q, MessageUTC, id_gateway);
 
-                    q->clear();
-                    save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
+                    //q->clear();
+                    //save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
                 }
 #endif
             }
