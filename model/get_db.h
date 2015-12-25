@@ -15,11 +15,12 @@ public:
 
     int sum_ship(QSqlDatabase db);
     int id_tu_ship(QSqlQuery *q, int id_ship, int urutan);
-    void modem_info(QSqlQuery *q, struct utama *marine, QFile *file);
-    void modem_getway(QSqlQuery *q, struct account *acc, QFile *file);
+    void modem_info(QSqlDatabase db, struct utama *marine);
+    void modem_getway(QSqlDatabase db, struct account *acc);
 
     bool check_table_is_available(QSqlQuery *q, int index);
 
+    init_mysql mysql;
     veranda_log vlog;
 };
 

@@ -138,18 +138,19 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
 }
 #endif
 
-void util_skyw::parse_xml_account_methode(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway, QFile *file){
+void util_skyw::parse_xml_account_methode(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway, QFile *file){
 #if 1
     if(id_gateway == MODEM_KURAYGEO){
-        parse_kureyGeo(skyw, q, marine, acc, id_gateway);
+        parse_kureyGeo(skyw, db, marine, acc, id_gateway);
     }
     else if(id_gateway == MODEM_IMANIPRIMA){
-        parse_imaniPrima(skyw, q, marine, acc, id_gateway);
+        parse_imaniPrima(skyw, db, marine, acc, id_gateway);
     }
 #endif
 }
 
-void util_skyw::parse_kureyGeo(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway){
+void util_skyw::parse_kureyGeo(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway){
+#if 0
     int cnt = 0;
     int cnt_tu = 1;
     int n;
@@ -241,9 +242,10 @@ void util_skyw::parse_kureyGeo(QString skyw, QSqlQuery *q, utama *marine, accoun
             }
         }
     }
+#endif
 }
 
-void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, account *acc, int id_gateway){
+void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway){
 #if 1
     int cnt = 0;
     int cnt_tu = 1;
@@ -274,6 +276,9 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
     xml.clear();
     xml.addData(skyw);
 
+    db.open();
+    QSqlQuery q(db);
+
     while(!xml.atEnd() &&  !xml.hasError()){
         QXmlStreamReader::TokenType token = xml.readNext();
         if(token == QXmlStreamReader::StartElement){
@@ -295,9 +300,9 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
 
             if(SIN == 128 || SIN == 19){
-                bool table_found = get.check_table_is_available(q, f_mUTC);
+                bool table_found = get.check_table_is_available(&q, f_mUTC);
                 if(!table_found){
-                    save.create_tabel_data_harian(q, f_mUTC);
+                    save.create_tabel_data_harian(&q, f_mUTC);
                 }
 #if 1
                 if (xml.name() == "MobileID"){
@@ -329,7 +334,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                         f_5c32g.clear();
                         f_5c32g = parse.format_5cut_32get(bin);
 
-                        parse.parse_data(q, f_5c32g, marine->kapal[n].id_ship, f_mUTC);
+                        parse.parse_data(&q, f_5c32g, marine->kapal[n].id_ship, f_mUTC);
                     }
 
                     if(xml.name() == "Payload"){
@@ -391,7 +396,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
 
                             if(get_data){
                                 if(data_float){
-                                   id_tu = get.id_tu_ship(q, marine->kapal[n].id_ship, data_ke);
+                                   id_tu = get.id_tu_ship(&q, marine->kapal[n].id_ship, data_ke);
                                    tu_df[cnt_df] = id_tu;
                                    cnt_df++;
                                 }
@@ -404,8 +409,8 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                                         const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
                                         data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
-                                        save.data(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
-                                        save.data_harian(q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
+                                        save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
                                     }
 
                                     printf("%s\n", data_raw.toUtf8().data());
@@ -415,11 +420,11 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlQuery *q, utama *marine, acco
                             }
                         }
                     }
-                    q->clear();
-                    save.update_next_utc_gateway(q, MessageUTC, id_gateway);
+                    q.clear();
+                    save.update_next_utc_gateway(&q, MessageUTC, id_gateway);
 
-                    //q->clear();
-                    //save.update_next_utc(q, MessageUTC, marine->kapal[n].id_ship);
+                    q.clear();
+                    save.update_next_utc(&q, MessageUTC, marine->kapal[n].id_ship);
                 }
 #endif
             }

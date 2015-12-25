@@ -10,8 +10,7 @@ Worker::Worker(QObject *parent) : QObject(parent){
 
     this->initNetworkManager(files);
 
-    db = mysql.connect_db(files);
-    qsql = new QSqlQuery(db);
+    db = mysql.connect_db();
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
     timer.start((1000 * 60 * 10) / 2); /* 5 menit */
@@ -22,15 +21,14 @@ Worker::Worker(QObject *parent) : QObject(parent){
     acc = (struct account *) malloc ( sizeof (struct account));
     memset((char *) acc, 0, sizeof(struct account));
 
-    qsql->clear();
-    get.modem_info(qsql, marine, files);
-    get.modem_getway(qsql, acc, files);
+    get.modem_info(db, marine);
+    get.modem_getway(db, acc);
 
     ship_count = 0;
     gateway_count = 0;
     cnt_panggil = 0;
 
-    //this->doWork();
+    this->doWork();
 }
 
 void Worker::initNetworkManager(QFile *file){
@@ -65,7 +63,7 @@ void Worker::replyFinished(QNetworkReply* reply){
     xmlStr.clear();
 
     xmlStr=reply->readAll();
-    read.parse_xml_account_methode(xmlStr, qsql, marine, acc, acc->gway[gateway_count].id, files);
+    read.parse_xml_account_methode(xmlStr, db, marine, acc, acc->gway[gateway_count].id, files);
 
     gateway_count++;
 
