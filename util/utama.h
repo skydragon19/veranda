@@ -33,8 +33,12 @@ struct getway{
     int id;
     char link[512];
     char nextutc[32];
+    char access_id[16];
+    char password[16];
     int SIN;
     int MIN;
+    int status;
+
 };
 
 struct account{

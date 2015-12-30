@@ -40,8 +40,11 @@ void save_db::update_next_utc(QSqlQuery *q, QString next_utc, int id_ship){
     */
 
     QString query;
+    /*
     query.sprintf("UPDATE ship SET nextutc = '%s' where id_ship = %d", next_utc.toUtf8().data(), id_ship);
+    */
 
+    query.sprintf("REPLACE INTO last_update(id_ship, utc) VALUES(%d, '%s')", id_ship, next_utc.toUtf8().data());
     q->exec(query);
 }
 
