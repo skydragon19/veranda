@@ -140,8 +140,9 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
                 q->clear();
                 int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
-#if 0
+
                     data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), id_tu, data_f);
+#if 0
                     q->clear();
                     save.data(q, data_f, id_tu, 0, epochtime, dat_time);
 #else
@@ -168,7 +169,6 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
 
     if(ambil_data){
         for (int i = 0; i < index; i++){
-            qDebug("'%d' = [%.2f]", measurement_point[i], data_vtes[i]);
             save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
             save.data_harian(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time, f_mUTC);
         }

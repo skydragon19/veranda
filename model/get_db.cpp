@@ -106,7 +106,6 @@ void get_db::modem_getway(QSqlDatabase db, account *acc){
                  acc->gway[n].MIN = MIN;
                  acc->gway[n].status = status_active;
 
-                 qDebug() << acc->gway[n].id << acc->gway[n].access_id << acc->gway[n].password << acc->gway[n].SIN << acc->gway[n].MIN << acc->gway[n].nextutc << acc->gway[n].status;
                  n++;
              }
         }
