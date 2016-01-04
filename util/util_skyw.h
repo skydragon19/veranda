@@ -24,9 +24,9 @@ public:
     void parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int MIN, struct utama *kapal, int urut);
 #endif
 
-    void parse_xml_account_methode(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway, QFile *file);
-    void parse_kureyGeo(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway);
-    void parse_imaniPrima(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway);
+    void parse_xml_account_methode(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway, int index_gway);
+    void parse_kureyGeo(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway, int index_gway);
+    void parse_imaniPrima(QString skyw, QSqlDatabase db, struct utama *marine, struct account *acc, int id_gateway, int index_gway);
 
 signals:
     

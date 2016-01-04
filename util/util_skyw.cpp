@@ -138,18 +138,18 @@ void util_skyw::parse_xml(QString skyw, QSqlQuery *q, int id_ship, int SIN, int 
 }
 #endif
 
-void util_skyw::parse_xml_account_methode(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway, QFile *file){
+void util_skyw::parse_xml_account_methode(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway, int index_gway){
 #if 1
     if(id_gateway == MODEM_KURAYGEO){
-        parse_kureyGeo(skyw, db, marine, acc, id_gateway);
+        parse_kureyGeo(skyw, db, marine, acc, id_gateway, index_gway);
     }
     else if(id_gateway == MODEM_IMANIPRIMA){
-        parse_imaniPrima(skyw, db, marine, acc, id_gateway);
+        parse_imaniPrima(skyw, db, marine, acc, id_gateway, index_gway);
     }
 #endif
 }
 
-void util_skyw::parse_kureyGeo(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway){
+void util_skyw::parse_kureyGeo(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway, int index_gway){
 #if 0
     int cnt = 0;
     int cnt_tu = 1;
@@ -245,7 +245,7 @@ void util_skyw::parse_kureyGeo(QString skyw, QSqlDatabase db, utama *marine, acc
 #endif
 }
 
-void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway){
+void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, account *acc, int id_gateway, int index_gway){
 #if 1
     int cnt = 0;
     int cnt_tu = 1;
@@ -286,9 +286,10 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
 
             if (xml.name() == "MessageUTC"){
                 MessageUTC.sprintf("%s", xml.readElementText().toUtf8().data());
+
                 f_mUTC = parse.get_date(MessageUTC);
 
-                strcpy(acc->gway[id_gateway-1].nextutc, MessageUTC.toLatin1());
+                strcpy(acc->gway[index_gway].nextutc, MessageUTC.toLatin1());
                 tracking_data = 0;
                 cnt_df = 0;
             }

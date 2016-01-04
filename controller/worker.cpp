@@ -13,7 +13,7 @@ Worker::Worker(QObject *parent) : QObject(parent){
     db = mysql.connect_db();
 
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
-    timer.start((1000 * 60 * 10) / 2); /* 5 menit */
+    timer.start((1000 * 60 * 10) / 2 / 10); /* 5 menit */
 
     marine = (struct utama *) malloc( sizeof (struct utama));
     memset((char *) marine, 0, sizeof(struct utama));
@@ -63,7 +63,7 @@ void Worker::replyFinished(QNetworkReply* reply){
     xmlStr.clear();
 
     xmlStr=reply->readAll();
-    read.parse_xml_account_methode(xmlStr, db, marine, acc, acc->gway[gateway_count].id, files);
+    read.parse_xml_account_methode(xmlStr, db, marine, acc, acc->gway[gateway_count].id, gateway_count);
 
     gateway_count++;
 
@@ -72,6 +72,6 @@ void Worker::replyFinished(QNetworkReply* reply){
     }
     else{
         gateway_count = 0;
-        timer.start((1000 * 60 * 10) / 2);
+        timer.start((1000 * 60 * 10) / 2 /10);
     }
 }
