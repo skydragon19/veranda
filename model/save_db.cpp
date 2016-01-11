@@ -16,6 +16,18 @@ void save_db::data(QSqlQuery *q, float value, int id_tu, int id_trip, int epocht
     q->exec();
 }
 
+void save_db::data_test(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time){
+    q->prepare("REPLACE INTO data_test(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)");
+
+    q->bindValue(":id_titik_ukur", id_tu);
+    q->bindValue(":value", value);
+    q->bindValue(":id_trip", id_trip);
+    q->bindValue(":epochtime", epochtime);
+    q->bindValue(":data_time", data_time.toUtf8().data());
+
+    q->exec();
+}
+
 void save_db::data_harian(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time, int index){
     QString query;
     query.sprintf("REPLACE INTO data_%d(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)", index);
@@ -58,4 +70,13 @@ void save_db::create_tabel_data_harian(QSqlQuery *q, int index){
     query.sprintf("CREATE TABLE if not exists data_%d (id_titik_ukur INT NOT NULL, value FLOAT NOT NULL, id_trip INT NULL DEFAULT NULL, \
                   epochtime INT NOT NULL, data_time DATETIME NOT NULL, PRIMARY KEY (id_titik_ukur, data_time))", index);
     q->exec(query);
+}
+
+void save_db::delete_data_periodic(QSqlQuery *q, int index){
+    QString query;
+
+    query.clear();
+    query.sprintf("DELETE FROM data_text where epochtime < %d", index);
+
+    qDebug() << query;
 }

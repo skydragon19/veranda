@@ -258,6 +258,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
 
     QString MobileID;
     QString MessageUTC;
+    QString UTC_Roll5_Day;
     QString RawPayload;
 
     QString decode;
@@ -272,6 +273,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
     int tracking_data = 0;
 
     int f_mUTC;
+    int f_5bmUTC;
 
     xml.clear();
     xml.addData(skyw);
@@ -286,15 +288,28 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
 
             if (xml.name() == "MessageUTC"){
                 MessageUTC.sprintf("%s", xml.readElementText().toUtf8().data());
-
                 f_mUTC = parse.get_date(MessageUTC);
 
                 strcpy(acc->gway[index_gway].nextutc, MessageUTC.toLatin1());
                 tracking_data = 0;
                 cnt_df = 0;
+#if 0
+                uint x = QDateTime::fromString(QString(MessageUTC), "yyyy-MM-dd hh:mm:ss").toTime_t();
+                uint y = x - 432000; /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
+
+                /* Convert TimeStamp to DateTime */
+                QDateTime fiveback =  QDateTime::fromTime_t(y);
+                UTC_Roll5_Day = fiveback.toString("yyyy-MM-dd hh:mm:ss");
+                f_5bmUTC = parse.get_date(UTC_Roll5_Day);
+
+                bool table_found = get.check_table_is_available(&q, f_5bmUTC);
+                qDebug() << "table_found :" << table_found;
+                if(table_found){
+                    qDebug("Drop tabel data_%d", f_5bmUTC);
+                }
+#endif
             }
 #if 1
-
             if (xml.name() == "SIN"){
                 SIN = xml.readElementText().toInt();
             }
@@ -411,11 +426,14 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
 
                                         data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
                                         save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        save.data_test(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                         save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
+
+                                        /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
+                                        int epocht_5ago = (int) epochTime - 432000;
+                                        save.delete_data_periodic(&q, epocht_5ago);
                                     }
-
                                     printf("%s\n", data_raw.toUtf8().data());
-
                                     cnt_df = 0;
                                 }
                             }
