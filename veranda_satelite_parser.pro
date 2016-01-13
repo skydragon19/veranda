@@ -10,7 +10,7 @@ QT       -= gui
 QT       += sql
 QT       += network
 
-TARGET = veranda_satelite_parser
+TARGET    = veranda_tanker
 CONFIG   += console
 CONFIG   -= app_bundle
 
