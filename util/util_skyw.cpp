@@ -424,7 +424,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
                                     for(int i = 0; i < cnt_df; i++){
                                         const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
-                                        data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
+                                        //data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
                                         save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                         //save.data_test(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                         save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);

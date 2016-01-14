@@ -5,6 +5,19 @@ save_db::save_db()
 }
 
 void save_db::data(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time){
+    //printf("insert id_tu : %d --> value : %.2f\n", id_tu, value);
+
+    QString query;
+    query.sprintf("REPLACE INTO data(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(%d, %.2f, %d, %d, '%s')",
+                  id_tu, value, id_trip, epochtime, data_time.toUtf8().data());
+
+    printf("%s\n", query.toUtf8().data());
+
+    q->prepare(query);
+    q->exec();
+
+
+    /*
     q->prepare("REPLACE INTO data(id_titik_ukur, value, id_trip, epochtime, data_time) VALUES(:id_titik_ukur, :value, :id_trip, :epochtime, :data_time)");
 
     q->bindValue(":id_titik_ukur", id_tu);
@@ -12,8 +25,9 @@ void save_db::data(QSqlQuery *q, float value, int id_tu, int id_trip, int epocht
     q->bindValue(":id_trip", id_trip);
     q->bindValue(":epochtime", epochtime);
     q->bindValue(":data_time", data_time.toUtf8().data());
+    */
 
-    q->exec();
+
 }
 
 void save_db::data_test(QSqlQuery *q, float value, int id_tu, int id_trip, int epochtime, QString data_time){
