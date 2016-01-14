@@ -170,11 +170,11 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_
     if(ambil_data){
         for (int i = 0; i < index; i++){
             save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
-            save.data_test(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
+            //save.data_test(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
             save.data_harian(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time, f_mUTC);
 
-            int epoch_5ago = (int) epochtime - 432000; /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
-            save.delete_data_periodic(q, epoch_5ago);
+            //int epoch_5ago = (int) epochtime - 432000; /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
+            //save.delete_data_periodic(q, epoch_5ago);
         }
     }
 

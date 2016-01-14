@@ -426,12 +426,12 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
 
                                         data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
                                         save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
-                                        save.data_test(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        //save.data_test(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
                                         save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
 
                                         /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
-                                        int epocht_5ago = (int) epochTime - 432000;
-                                        save.delete_data_periodic(&q, epocht_5ago);
+                                        //int epocht_5ago = (int) epochTime - 432000;
+                                        //save.delete_data_periodic(&q, epocht_5ago);
                                     }
                                     printf("%s\n", data_raw.toUtf8().data());
                                     cnt_df = 0;
