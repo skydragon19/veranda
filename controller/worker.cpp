@@ -50,11 +50,9 @@ void Worker::getResponSkyW(){
     QNetworkRequest request;
 
     urls.sprintf("%s%s", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
-
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
 
     request.setUrl(url);
-
     manager->get(request);
 }
 

@@ -78,5 +78,5 @@ void save_db::delete_data_periodic(QSqlQuery *q, int index){
     query.clear();
     query.sprintf("DELETE FROM data_text where epochtime < %d", index);
 
-    qDebug() << query;
+    q->exec(query);
 }

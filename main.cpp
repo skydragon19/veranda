@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    printf("Veranda Satalite Parser Started ::");
+    printf("Veranda Satalite Parser Started :: \n");
 
     Worker worker;
 
