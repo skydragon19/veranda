@@ -16,7 +16,7 @@
 #include "../util/util_skyw.h"
 #include "../util/utama.h"
 
-#include "../model/get_db.h";
+#include "../model/get_db.h"
 #include "../model/init_mysql.h"
 
 class Worker : public QObject
