@@ -9,6 +9,8 @@
 
 #include <QSettings>
 
+#include "util/utama.h"
+
 class init_mysql
 {
 public:

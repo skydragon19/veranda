@@ -6,9 +6,7 @@
 #include <QSqlQuery>
 
 #include <QDateTime>
-
 #include <util/utama.h>
-
 
 class get_db
 {
@@ -17,7 +15,13 @@ public:
 
     int sum_ship(QSqlDatabase db);
     int id_tu_ship(QSqlQuery *q, int id_ship, int urutan);
-    void modem_info(QSqlQuery *q, struct utama *marine);
+    void modem_info(QSqlDatabase db, struct utama *marine);
+    void modem_getway(QSqlDatabase db, struct account *acc);
+
+    bool check_table_is_available(QSqlQuery *q, int index);
+
+    init_mysql mysql;
+    veranda_log vlog;
 };
 
 #endif // GET_DB_H

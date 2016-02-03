@@ -100,7 +100,8 @@ QString parsing_function::format_5cut_32get(QString biner){
     return (QString) all_32bit;
 }
 
-void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
+void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship, int f_mUTC){
+    QString data_raw;
     int epochtime;
     QString dat_time;
 
@@ -110,12 +111,14 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
     int decimal;
     QString data = "";
 
+    bool ambil_data = false;
+
     char dats[dat.size()+1];
     strcpy(dats, dat.toLatin1());
 
-    int jum_dat = (dat.size() / 32);
-#if 1
-    int cnt_df = 0;
+    data_raw.clear();
+
+    index = 0;
 
     for (int i = 0; i < dat.size(); i++){
         cnt_p++;
@@ -123,12 +126,11 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
 
         if (cnt_p == 32){
             cnt_d++;
+
             decimal = bin_to_decimal(data);
-
             data_f = *(float *) &decimal;
-            cnt_df++;
 
-#if 1 /* hasil parsing n data float */
+            /* hasil parsing n data float */
             if (cnt_d == 1){
                 epochtime = (int) data_f;
                 const QDateTime time = QDateTime::fromTime_t((((int)data_f)));
@@ -138,19 +140,45 @@ void parsing_function::parse_data(QSqlQuery *q, QString dat, int id_ship){
                 q->clear();
                 int id_tu = get.id_tu_ship(q, id_ship, cnt_d-1);
                 if (id_tu != 0){
-                    printf("\n%d", id_tu);
+
+                    data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), id_tu, data_f);
+#if 0
+                    q->clear();
                     save.data(q, data_f, id_tu, 0, epochtime, dat_time);
+#else
+                    measurement_point[index] = id_tu;
+                    data_vtes[index] = (float) data_f;
+
+                    if(index > 3 && ambil_data == false){
+                        if(data_f != 0.00){
+                            ambil_data = true;
+                        }
+                    }
+
+                    index++;
+#endif
                 }
                 else{
                     printf("\nbelum di set parsing_ref nya");
                 }
             }
-#endif
             data = "";
             cnt_p = 0;
         }
     }
-#endif
+
+    if(ambil_data){
+        for (int i = 0; i < index; i++){
+            save.data(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
+            //save.data_test(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time);
+            save.data_harian(q, data_vtes[i], measurement_point[i], 0, epochtime, dat_time, f_mUTC);
+
+            //int epoch_5ago = (int) epochtime - 432000; /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
+            //save.delete_data_periodic(q, epoch_5ago);
+        }
+    }
+
+    printf("%s\n", data_raw.toUtf8().data());
 }
 
 int parsing_function::bin_to_decimal(QString dat32){
@@ -179,6 +207,25 @@ int parsing_function::operasi_pangkat(int n){
     return (int) hasil;
 }
 
-QString parsing_function::bin_to_hex(QString biner){
-    char bin[biner.size()+1];
+
+int parsing_function::get_date(QString mUTC){
+    QString f_mUTC;
+    bool utc_state = true;
+    char dtimes[mUTC.length()+1];
+
+    f_mUTC.clear();
+
+    strcpy(dtimes, mUTC.toLatin1());
+    for(int i = 0; i < mUTC.length(); i++){
+        if(dtimes[i] == ' '){
+            utc_state = false;
+        }
+
+        if(utc_state){
+            if(dtimes[i] != '-'){
+                f_mUTC.sprintf("%s%c", f_mUTC.toUtf8().data(), dtimes[i]);
+            }
+        }
+    }
+    return (int) f_mUTC.toInt();
 }

@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QDateTime>
 
+#include <util/utama.h>
+
 #include <model/get_db.h>
 #include <model/save_db.h>
 
@@ -19,16 +21,21 @@ public:
     QString hex_to_bin_conversion(QString hex);
     QString hex_to_bin(char dat);
     QString format_5cut_32get(QString biner);
-    QString bin_to_hex(QString biner);
 
-    void parse_data(QSqlQuery *q, QString dat, int id_ship);
+    void parse_data(QSqlQuery *q, QString dat, int id_ship,int f_mUTC);
 
     int bin_to_decimal(QString dat32);
     int operasi_pangkat(int n);
 
+    int get_date(QString mUTC);
+
 private:
     get_db get;
     save_db save;
+
+    float data_vtes[MAX_MEASUREMENT_POINT];
+    int measurement_point[MAX_MEASUREMENT_POINT];
+    int index;
 
 };
 

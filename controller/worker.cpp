@@ -1,29 +1,37 @@
 #include "worker.h"
 
 Worker::Worker(QObject *parent) : QObject(parent){
-    this->initNetworkManager();
+    fileName.sprintf("%s/log/log.txt", QDir::currentPath().toUtf8().data());
 
-    printf("\nInitialization Database .. \n");
+    QFile file(fileName);
+
+    files = &file;
+    files->open(QIODevice::WriteOnly);
+
+    this->initNetworkManager(files);
+
     db = mysql.connect_db();
 
-    qsql = new QSqlQuery(db);
-
     connect(&timer, SIGNAL(timeout()), this, SLOT(doWork()));
-
-    timer.start(1000 * 60 * 10); /* 10 menit */
-
-    ship_count = 0;
+    timer.start((1000 * 60 * 10) / 2); /* 5 menit */
 
     marine = (struct utama *) malloc( sizeof (struct utama));
     memset((char *) marine, 0, sizeof(struct utama));
 
-    printf("\nInitialization memory .. \n");
-    qsql->clear();
-    get.modem_info(qsql, marine);
+    acc = (struct account *) malloc ( sizeof (struct account));
+    memset((char *) acc, 0, sizeof(struct account));
+
+    get.modem_info(db, marine);
+    get.modem_getway(db, acc);
+
+    ship_count = 0;
+    gateway_count = 0;
+    cnt_panggil = 0;
+
     this->doWork();
 }
 
-void Worker::initNetworkManager(){
+void Worker::initNetworkManager(QFile *file){
     manager = new QNetworkAccessManager();
     connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(replyFinished(QNetworkReply *)));
 }
@@ -33,44 +41,35 @@ void Worker::CheckForRequest(){
 }
 
 void Worker::doWork(){
+    timer.stop();
     this->getResponSkyW();
-
-    //skywaveNetwork skw;
-    //skw.requestData("wdwd");
-    //skw.wait();
 }
 
 
 void Worker::getResponSkyW(){
-    printf("\nRequest --> %s ; MobileID [%s]\n", marine->kapal[ship_count].name, marine->kapal[ship_count].modem_id);
-
     QNetworkRequest request;
 
-    urls.sprintf("%s/get_return_messages.xml/?access_id=%s&password=%s&start_utc=%s&mobile_id=%s",
-                  marine->kapal[ship_count].gateway, marine->kapal[ship_count].access_id, marine->kapal[ship_count].password,
-                  marine->kapal[ship_count].nextutc, marine->kapal[ship_count].modem_id);
-
+    urls.sprintf("%s%s", acc->gway[gateway_count].link, acc->gway[gateway_count].nextutc);
     QUrl url =  QUrl::fromEncoded(urls.toLocal8Bit().data());
+
     request.setUrl(url);
-
     manager->get(request);
-
-    printf("Waiting for reply .. \n");
 }
 
 void Worker::replyFinished(QNetworkReply* reply){
-    printf("\nGet Respond for %s[%s]\n", marine->kapal[ship_count].name, marine->kapal[ship_count].modem_id);
-    QString readAll=reply->readAll();
-    read.parse_xml(readAll, qsql, marine->kapal[ship_count].id_ship, SIN, MIN, marine);
+    QString xmlStr;
+    xmlStr.clear();
 
-    ship_count++;
-#if 1
-    if (ship_count < marine->sum_ship){
-        this->doWork();        
-    }else{
-        ship_count = 0;
+    xmlStr=reply->readAll();
+    read.parse_xml_account_methode(xmlStr, db, marine, acc, acc->gway[gateway_count].id, gateway_count);
+
+    gateway_count++;
+
+    if (gateway_count < acc->sum_getway){
+        this->getResponSkyW();
     }
-#endif
-
-
+    else{
+        gateway_count = 0;
+        timer.start((1000 * 60 * 10) / 2);
+    }
 }

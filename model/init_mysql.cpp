@@ -11,13 +11,6 @@ QSqlDatabase init_mysql::connect_db(){
     db.setUserName("root");
     db.setPassword("rqi");
 
-    if(db.open()){
-        printf("Initialization                                          [DONE]\n");
-    }
-    else{
-        printf("Initialization                                          [FAILED]\n");
-    }
-
     return (QSqlDatabase) db;
 }
 
