@@ -16,6 +16,12 @@
 #define  MODEM_KURAYGEO   1
 #define  MODEM_IMANIPRIMA 2
 
+
+#define  DATA_TRACKING    "noEIO"
+
+#define  FLAG_ENGINE_DATA      0
+#define  FLAG_TRACKING_DATA    1
+
 #define  MAX_MEASUREMENT_POINT 999
 
 struct ship{
