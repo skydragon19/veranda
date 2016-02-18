@@ -22,7 +22,7 @@ public:
     QString hex_to_bin(char dat);
     QString format_5cut_32get(QString biner);
 
-    void parse_data(QSqlQuery *q, QString dat, int id_ship,int f_mUTC);
+    void parse_data(QSqlQuery *q, QString dat, int id_ship,int f_mUTC, int flag);
 
     int bin_to_decimal(QString dat32);
     int operasi_pangkat(int n);

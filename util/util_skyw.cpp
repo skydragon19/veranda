@@ -350,7 +350,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
                         f_5c32g.clear();
                         f_5c32g = parse.format_5cut_32get(bin);
 
-                        parse.parse_data(&q, f_5c32g, marine->kapal[n].id_ship, f_mUTC);
+                        parse.parse_data(&q, f_5c32g, marine->kapal[n].id_ship, f_mUTC, FLAG_ENGINE_DATA);
                     }
 
                     if(xml.name() == "Payload"){
@@ -362,7 +362,7 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
                         attributes_SIN = attributes.value("SIN").toString().toInt();
                         attributes_MIN = attributes.value("MIN").toString().toInt();
 
-                        if(attributes_name == "noEIO" && attributes_SIN == 19 && attributes_MIN == 4){
+                        if(attributes_name == DATA_TRACKING && attributes_SIN == 19 && attributes_MIN == 4){
                             tracking_data = 1;
                         }
                     }
@@ -425,9 +425,9 @@ void util_skyw::parse_imaniPrima(QString skyw, QSqlDatabase db, utama *marine, a
                                         const QDateTime time = QDateTime::fromTime_t((((int) epochTime)));
 
                                         //data_raw.sprintf("%s%d=[%.2f]; ", data_raw.toUtf8().data(), tu_df[i], dat_f[i]);
-                                        save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
+                                        save.data(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), FLAG_TRACKING_DATA);
                                         //save.data_test(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data());
-                                        save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC);
+                                        save.data_harian(&q, dat_f[i], tu_df[i], 0, epochTime, time.toString("yyyy-MM-dd hh:mm:ss").toUtf8().data(), f_mUTC, FLAG_TRACKING_DATA);
 
                                         /* timeStamp 5 day = 432000 -> 3600 * 24 * 5 */
                                         //int epocht_5ago = (int) epochTime - 432000;
