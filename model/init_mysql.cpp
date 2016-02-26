@@ -9,7 +9,7 @@ QSqlDatabase init_mysql::connect_db(){
     db.setHostName("localhost");
     db.setDatabaseName("marine_1");
     db.setUserName("root");
-    db.setPassword("rqi");
+    db.setPassword("monita2014");
 
     return (QSqlDatabase) db;
 }
