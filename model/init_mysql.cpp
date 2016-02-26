@@ -8,7 +8,7 @@ QSqlDatabase init_mysql::connect_db(){
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("localhost");
     db.setDatabaseName("marine_1");
-    db.setUserName("root");
+    db.setUserName("marine");
     db.setPassword("monita2014");
 
     return (QSqlDatabase) db;
